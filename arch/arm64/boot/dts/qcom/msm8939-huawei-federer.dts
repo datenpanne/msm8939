@@ -171,9 +171,6 @@
 		regulator-name = "panel_vled";
 
 		gpio = <&msmgpio 97 GPIO_ACTIVE_HIGH>;
-		pinctrl-names = "default";
-		pinctrl-0 = <&panel_vled_default>;
-
 		enable-active-high;
 		//startup-delay-us = <300>;
 	};
@@ -183,9 +180,10 @@
 		regulator-name = "lcd-pos";
 		regulator-min-microvolt = <5400000>;
 		regulator-max-microvolt = <5400000>;
-		vin-supply = <&pm8916_l6>;
 		
 		gpio = <&msmgpio 97 GPIO_ACTIVE_HIGH>;
+		pinctrl-names = "default";
+		pinctrl-0 = <&lcd_p_default>;
 		enable-active-high;
 		regulator-always-on;
 		regulator-boot-on;
@@ -196,9 +194,6 @@
 		regulator-name = "panel_iovcc";
 
 		gpio = <&msmgpio 32 GPIO_ACTIVE_HIGH>;
-		pinctrl-names = "default";
-		pinctrl-0 = <&panel_iovcc_default>;
-
 		enable-active-high;
 		startup-delay-us = <500>;
 	};
@@ -208,9 +203,10 @@
 		regulator-name = "lcd-neg";
 		regulator-min-microvolt = <5400000>;
 		regulator-max-microvolt = <5400000>;
-		vin-supply = <&pm8916_l6>;
 				
 		gpio = <&msmgpio 32 GPIO_ACTIVE_HIGH>;
+		pinctrl-names = "default";
+		pinctrl-0 = <&lcd_n_default>;
 		enable-active-high;
 		regulator-always-on;
 		regulator-boot-on;
@@ -316,6 +312,10 @@
 	status = "okay";
 	#address-cells = <1>;
 	#size-cells = <0>;
+	pinctrl-names = "default", "sleep";
+	pinctrl-0 = <&mdss_te_default>;
+	pinctrl-1 = <&mdss_te_sleep>;
+	
 	panel@0 {
 		status = "okay";
 		compatible = "boe,nt51021-10-1200p";
@@ -328,7 +328,7 @@
 		vled-supply = <&reg_panel_vled>;
 		iovcc-supply = <&reg_panel_iovcc>;
 
-		//te-gpios = <&msmgpio 24 GPIO_ACTIVE_HIGH>;
+		te-gpios = <&msmgpio 24 GPIO_ACTIVE_HIGH>;
 
 		backlight-gpios = <&msmgpio 109 GPIO_ACTIVE_HIGH>;
 
@@ -600,7 +600,7 @@
 		bias-disable;
 	};
 	
-	panel_vled_default: panel-vled-default {
+	lcd_p_default: lcd-p-default {
 		pins = "gpio97";
 		function = "gpio";
 
@@ -608,7 +608,7 @@
 		bias-disable;
 	};
 
-	panel_iovcc_default: panel-iovcc-default {
+	lcd_n_default: lcd-n-default {
 		pins = "gpio32";
 		function = "gpio";
 
@@ -633,7 +633,7 @@
 		};
 	};
 	
-	pmx_mdss_te {
+	mdss_te {
 		mdss_te_default: mdss_te_default {
 			pins = "gpio24";
 			function = "gpio";
