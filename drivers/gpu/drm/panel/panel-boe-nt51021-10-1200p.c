@@ -271,7 +271,7 @@ static int boe_nt51021_10_1200p_probe(struct mipi_dsi_device *dsi)
 	if (!ctx)
 		return -ENOMEM;
 
-	ctx->supplies[0].supply = "vled";
+	ctx->supplies[0].supply = "vci";
 	ctx->supplies[1].supply = "iovcc";	
 	ctx->supplies[2].supply = "vsp";
 	ctx->supplies[3].supply = "vsn";

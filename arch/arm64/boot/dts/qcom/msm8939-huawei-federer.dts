@@ -166,15 +166,6 @@
 		};
 	};
 
-	reg_panel_vled: regulator-panel-vled {
-		compatible = "regulator-fixed";
-		regulator-name = "panel_vled";
-
-		gpio = <&msmgpio 97 GPIO_ACTIVE_HIGH>;
-		enable-active-high;
-		//startup-delay-us = <300>;
-	};
-
 	reg_lcd_pos: regulator-lcd-pos {
 		compatible = "regulator-fixed";
 		regulator-name = "lcd-pos";
@@ -187,15 +178,6 @@
 		enable-active-high;
 		regulator-always-on;
 		regulator-boot-on;
-	};
-	
-	reg_panel_iovcc: regulator-panel-iovcc {
-		compatible = "regulator-fixed";
-		regulator-name = "panel_iovcc";
-
-		gpio = <&msmgpio 32 GPIO_ACTIVE_HIGH>;
-		enable-active-high;
-		startup-delay-us = <500>;
 	};
 
 	reg_lcd_neg: regulator-lcd-neg {
@@ -321,14 +303,13 @@
 		compatible = "boe,nt51021-10-1200p";
 		reg = <0>;
 
+		te-gpios = <&msmgpio 24 GPIO_ACTIVE_HIGH>;
 		reset-gpios = <&msmgpio 25 GPIO_ACTIVE_HIGH>;
 		vsp-supply = <&reg_lcd_pos>;
 		vsn-supply = <&reg_lcd_neg>;
-		
-		vled-supply = <&reg_panel_vled>;
-		iovcc-supply = <&reg_panel_iovcc>;
 
-		te-gpios = <&msmgpio 24 GPIO_ACTIVE_HIGH>;
+		iovcc-supply = <&reg_lcd_pos>;
+		vci-supply = <&reg_lcd_neg>;
 
 		backlight-gpios = <&msmgpio 109 GPIO_ACTIVE_HIGH>;
 
