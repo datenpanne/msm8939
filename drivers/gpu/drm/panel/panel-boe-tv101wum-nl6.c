@@ -721,6 +721,34 @@ static const struct panel_desc boe_tv105wum_nw0_desc = {
 	.init_cmds = boe_init_cmd,
 };
 
+static const struct drm_display_mode boe_nt51021_10_default_mode = {
+	.clock = 160392,
+	.hdisplay = 1200,
+	.hsync_start = 1200 + 64,
+	.hsync_end = 1200 + 64 + 4,
+	.htotal = 1200 + 64 + 4 + 36,
+	.vdisplay = 1920,
+	.vsync_start = 1920 + 104,
+	.vsync_end = 1920 + 104 + 2,
+	.vtotal = 1920 + 104 + 2 + 24,
+	.type = DRM_MODE_TYPE_DRIVER | DRM_MODE_TYPE_PREFERRED,
+};
+
+static const struct panel_desc boe_nt51021_10_desc = {
+	.modes = &boe_nt51021_10_default_mode,
+	.bpc = 8,
+	.size = {
+		.width_mm = 135,
+		.height_mm = 216,
+	},
+	.lanes = 4,
+	.format = MIPI_DSI_FMT_RGB888,
+	.mode_flags = MIPI_DSI_MODE_VIDEO | MIPI_DSI_MODE_VIDEO_SYNC_PULSE |
+		      MIPI_DSI_MODE_LPM,
+	.init_cmds = boe_init_cmd,
+	//.discharge_on_disable = false,
+};
+
 static int boe_panel_get_modes(struct drm_panel *panel,
 			       struct drm_connector *connector)
 {
@@ -869,6 +897,9 @@ static const struct of_device_id boe_of_match[] = {
 	},
 	{ .compatible = "boe,tv105wum-nw0",
 	  .data = &boe_tv105wum_nw0_desc
+	},
+	{ .compatible = "boe,nt51021-10-1200p",
+	  .data = &boe_nt51021_10_desc
 	},
 	{ /* sentinel */ }
 };
