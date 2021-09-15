@@ -196,7 +196,7 @@
 
 		enable-active-high;
 
-		gpio = <&pio 109 GPIO_ACTIVE_HIGH>;
+		gpio = <&msmgpio 109 GPIO_ACTIVE_HIGH>;
 	};
 	
 	usb_id: usb-id {
