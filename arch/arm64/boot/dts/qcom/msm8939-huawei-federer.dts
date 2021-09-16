@@ -305,7 +305,7 @@
 		reg = <0>;
 
 		te-gpios = <&msmgpio 24 GPIO_ACTIVE_HIGH>;
-		enable-gpios = <&msmgpio 25 GPIO_ACTIVE_HIGH>;
+		reset-gpios = <&msmgpio 25 GPIO_ACTIVE_HIGH>;
 		avdd-supply = <&ppvarn_lcd>;
 		avee-supply = <&ppvarp_lcd>;
 		pp1800-supply = <&pp1800_lcd>;
@@ -539,7 +539,7 @@
 		pins = "gpio115";
 		function = "gpio";
 
-		drive-strength = <2>;
+		drive-strength = <6>;
 		bias-disable;
 	};
 

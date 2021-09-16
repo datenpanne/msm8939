@@ -19,9 +19,8 @@
 struct boe_nt51021_10_1200p {
 	struct drm_panel panel;
 	struct mipi_dsi_device *dsi;
-	struct regulator_bulk_data supplies[4];
+	struct regulator_bulk_data supplies[3];
 	struct gpio_desc *reset_gpio;
-	struct gpio_desc *backlight_gpio;
 	bool prepared;
 };
 
@@ -206,11 +205,8 @@ static const struct drm_panel_funcs boe_nt51021_10_1200p_panel_funcs = {
 static int boe_nt51021_10_1200p_bl_update_status(struct backlight_device *bl)
 {
 	struct mipi_dsi_device *dsi = bl_get_data(bl);
-	struct boe_nt51021_10_1200p *ctx = mipi_dsi_get_drvdata(dsi);
 	u16 brightness = backlight_get_brightness(bl);
 	int ret;
-
-	gpiod_set_value_cansleep(ctx->backlight_gpio, !!brightness);
 
 	dsi->mode_flags &= ~MIPI_DSI_MODE_LPM;
 
@@ -271,10 +267,9 @@ static int boe_nt51021_10_1200p_probe(struct mipi_dsi_device *dsi)
 	if (!ctx)
 		return -ENOMEM;
 
-	ctx->supplies[0].supply = "vci";
-	ctx->supplies[1].supply = "iovcc";	
-	ctx->supplies[2].supply = "vsp";
-	ctx->supplies[3].supply = "vsn";
+	ctx->supplies[0].supply = "avdd";
+	ctx->supplies[1].supply = "avee";
+	ctx->supplies[2].supply = "pp1800";
 	ret = devm_regulator_bulk_get(dev, ARRAY_SIZE(ctx->supplies),
 				      ctx->supplies);
 	if (ret < 0)
@@ -285,19 +280,13 @@ static int boe_nt51021_10_1200p_probe(struct mipi_dsi_device *dsi)
 		return dev_err_probe(dev, PTR_ERR(ctx->reset_gpio),
 				     "Failed to get reset-gpios\n");
 
-	ctx->backlight_gpio = devm_gpiod_get(dev, "backlight", GPIOD_OUT_LOW);
-	if (IS_ERR(ctx->backlight_gpio))
-		return dev_err_probe(dev, PTR_ERR(ctx->backlight_gpio),
-				     "Failed to get backlight-gpios\n");
-
 	ctx->dsi = dsi;
 	mipi_dsi_set_drvdata(dsi, ctx);
 
 	dsi->lanes = 4;
 	dsi->format = MIPI_DSI_FMT_RGB888;
-	dsi->mode_flags = MIPI_DSI_MODE_VIDEO | MIPI_DSI_MODE_VIDEO_BURST |
-			  MIPI_DSI_MODE_VIDEO_HSE | MIPI_DSI_MODE_EOT_PACKET |
-			  MIPI_DSI_CLOCK_NON_CONTINUOUS;
+	dsi->mode_flags = MIPI_DSI_MODE_VIDEO | MIPI_DSI_MODE_VIDEO_SYNC_PULSE |
+		      MIPI_DSI_MODE_LPM,
 
 	drm_panel_init(&ctx->panel, dev, &boe_nt51021_10_1200p_panel_funcs,
 		       DRM_MODE_CONNECTOR_DSI);
