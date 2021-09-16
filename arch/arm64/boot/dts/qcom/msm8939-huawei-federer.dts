@@ -176,7 +176,8 @@
 		
 		pinctrl-names = "default";
 		pinctrl-0 = <vcc3v3_lcd_en>;
-	
+	 };
+
 	vcc_1v8: vcc-1v8 {
 		compatible = "regulator-fixed";
 		regulator-name = "vcc-1v8";
