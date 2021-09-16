@@ -739,7 +739,7 @@ static const struct panel_desc boe_nt51021_10_desc = {
 	.bpc = 8,
 	.size = {
 		.width_mm = 135,
-		.height_mm = 216,
+		.height_mm = 217,
 	},
 	.lanes = 4,
 	.format = MIPI_DSI_FMT_RGB888,
