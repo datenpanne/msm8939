@@ -271,8 +271,8 @@ static int boe_nt51021_10_1200p_probe(struct mipi_dsi_device *dsi)
 	if (!ctx)
 		return -ENOMEM;
 
-	ctx->supplies[0].supply = "vsp";
-	ctx->supplies[1].supply = "vsn";
+	ctx->supplies[0].supply = "iovcc";
+	ctx->supplies[1].supply = "vci";
 	ret = devm_regulator_bulk_get(dev, ARRAY_SIZE(ctx->supplies),
 				      ctx->supplies);
 	if (ret < 0)
