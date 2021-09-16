@@ -165,39 +165,6 @@
 			reg = <0 0xffc00000 0 0x400000>;
 		};
 	};
-
-	ppvarn_lcd: ppvarn-lcd {
-		compatible = "regulator-fixed";
-		regulator-name = "ppvarn_lcd";
-		pinctrl-names = "default";
-		pinctrl-0 = <&ppvarn_lcd_en>;
-
-		enable-active-high;
-
-		gpio = <&msmgpio 32 GPIO_ACTIVE_HIGH>;
-	};
-
-	ppvarp_lcd: ppvarp-lcd {
-		compatible = "regulator-fixed";
-		regulator-name = "ppvarp_lcd";
-		pinctrl-names = "default";
-		pinctrl-0 = <&ppvarp_lcd_en>;
-
-		enable-active-high;
-
-		gpio = <&msmgpio 97 GPIO_ACTIVE_HIGH>;
-	};
-
-	pp1800_lcd: pp1800-lcd {
-		compatible = "regulator-fixed";
-		regulator-name = "pp1800_lcd";
-		pinctrl-names = "default";
-		pinctrl-0 = <&pp1800_lcd_en>;
-
-		enable-active-high;
-
-		gpio = <&msmgpio 109 GPIO_ACTIVE_HIGH>;
-	};
 	
 	usb_id: usb-id {
 		compatible = "linux,extcon-usb-gpio";
@@ -295,20 +262,19 @@
 	status = "okay";
 	#address-cells = <1>;
 	#size-cells = <0>;
-	pinctrl-names = "default", "sleep";
-	pinctrl-0 = <&mdss_te_default>;
-	pinctrl-1 = <&mdss_te_sleep>;
 	
 	panel@0 {
 		status = "okay";
 		compatible = "boe,nt51021-10-1200p";
 		reg = <0>;
 
-		te-gpios = <&msmgpio 24 GPIO_ACTIVE_HIGH>;
-		reset-gpios = <&msmgpio 25 GPIO_ACTIVE_HIGH>;
-		avdd-supply = <&ppvarn_lcd>;
-		avee-supply = <&ppvarp_lcd>;
-		pp1800-supply = <&pp1800_lcd>;
+		iovcc-supply = <&vcc_1v8>;
+		vci-supply = <&vcc3v3_lcd>;
+
+		backlight-gpios = <&msmgpio 109 GPIO_ACTIVE_HIGH>;
+
+		pinctrl-names = "default";
+		pinctrl-0 = <&lcd_bl_en_default>;
 
 		port {
 			panel_in: endpoint {
@@ -566,25 +532,9 @@
 		drive-strength = <2>;
 		bias-disable;
 	};
-	
-	pp1800_lcd_en: pp1800-lcd-en {
+
+	lcd_bl_en_default: lcd-bl-en-default {
 		pins = "gpio109";
-		function = "gpio";
-
-		drive-strength = <2>;
-		bias-disable;
-	};
-	
-	ppvarp_lcd_en: ppvarp-lcd-en {
-		pins = "gpio97";
-		function = "gpio";
-
-		drive-strength = <2>;
-		bias-disable;
-	};
-
-	ppvarn_lcd_en: ppvarn-lcd-en {
-		pins = "gpio32";
 		function = "gpio";
 
 		drive-strength = <2>;
@@ -601,24 +551,6 @@
 		};
 		mdss_sleep: mdss-sleep {
 			pins = "gpio25";
-			function = "gpio";
-
-			drive-strength = <2>;
-			bias-pull-down;
-		};
-	};
-	
-	mdss_te {
-		mdss_te_default: mdss_te_default {
-			pins = "gpio24";
-			function = "gpio";
-
-			drive-strength = <8>;
-			bias-disable;
-		};
-
-		mdss_te_sleep: mdss_te_sleep {
-			pins = "gpio24";
 			function = "gpio";
 
 			drive-strength = <2>;
