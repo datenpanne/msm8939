@@ -744,8 +744,8 @@ static const struct panel_desc boe_nt51021_10_desc = {
 	.lanes = 4,
 	.format = MIPI_DSI_FMT_RGB888,
 	.mode_flags = MIPI_DSI_MODE_VIDEO | MIPI_DSI_MODE_VIDEO_BURST |
-		 MIPI_DSI_MODE_VIDEO_HSE | MIPI_DSI_MODE_EOT_PACKET |
-		 MIPI_DSI_CLOCK_NON_CONTINUOUS,
+		 MIPI_DSI_MODE_VIDEO_HSE | MIPI_DSI_MODE_NO_EOT_PACKET |
+		 MIPI_DSI_CLOCK_NON_CONTINUOUS | MIPI_DSI_MODE_LPM,
 	.init_cmds = boe_init_cmd,
 	//.discharge_on_disable = false,
 };
