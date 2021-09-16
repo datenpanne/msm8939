@@ -165,6 +165,29 @@
 			reg = <0 0xffc00000 0 0x400000>;
 		};
 	};
+
+	vcc3v3_lcd: vcc3v3-lcd {
+		compatible = "regulator-fixed";
+		regulator-name = "vcc3v3-lcd";
+
+		gpio = <&msmgpio 97 GPIO_ACTIVE_HIGH>;
+		enable-active-high;
+		regulator-boot-on;
+		
+		pinctrl-names = "default";
+		pinctrl-0 = <vcc3v3_lcd_en>;
+	
+	vcc_1v8: vcc-1v8 {
+		compatible = "regulator-fixed";
+		regulator-name = "vcc-1v8";
+
+		gpio = <&msmgpio 32 GPIO_ACTIVE_HIGH>;
+		enable-active-high;
+		regulator-boot-on;		
+		
+		pinctrl-names = "default";
+		pinctrl-0 = <&vcc_1v8_en>;
+	};
 	
 	usb_id: usb-id {
 		compatible = "linux,extcon-usb-gpio";
@@ -535,6 +558,22 @@
 
 	lcd_bl_en_default: lcd-bl-en-default {
 		pins = "gpio109";
+		function = "gpio";
+
+		drive-strength = <2>;
+		bias-disable;
+	};
+
+	vcc3v3_lcd_en: vcc3v3-lcd-en {
+		pins = "gpio97";
+		function = "gpio";
+
+		drive-strength = <2>;
+		bias-disable;
+	};
+
+	vcc_1v8_en: vcc-1v8-en {
+		pins = "gpio32";
 		function = "gpio";
 
 		drive-strength = <2>;
