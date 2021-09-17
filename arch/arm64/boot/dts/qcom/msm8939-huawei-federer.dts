@@ -296,7 +296,8 @@
 
 		iovcc-supply = <&vcc_1v8>;
 		vci-supply = <&vcc3v3_lcd>;
-
+		
+		reset-gpios = <&msmgpio 25 GPIO_ACTIVE_HIGH>;
 		backlight-gpios = <&msmgpio 109 GPIO_ACTIVE_HIGH>;
 
 		pinctrl-names = "default";
