@@ -166,30 +166,30 @@
 		};
 	};
 
-	vcc3v3_lcd: vcc3v3-lcd {
+	reg_lcd_pos: regulator-lcd-pos {
 		compatible = "regulator-fixed";
-		regulator-name = "vcc3v3_lcd";
-		regulator-min-microvolt = <3300000>;
-		regulator-max-microvolt = <3300000>;
-		pinctrl-names = "default";
-		pinctrl-0 = <&vcc3v3_lcd_en>;
-
-		enable-active-high;
-
+		regulator-name = "lcd-pos";
+		regulator-min-microvolt = <5400000>;
+		regulator-max-microvolt = <5400000>;
 		gpio = <&msmgpio 97 GPIO_ACTIVE_HIGH>;
+		enable-active-high;
+		regulator-always-on;
+		regulator-boot-on;
+		pinctrl-names = "default";
+		pinctrl-0 = <&lcd_p_en_default>;
 	};
 
-	vcc_1v8: vcc-1v8 {
+	reg_lcd_neg: regulator-lcd-neg {
 		compatible = "regulator-fixed";
-		regulator-name = "vcc_1v8";
-		regulator-min-microvolt = <1800000>;
-		regulator-max-microvolt = <1800000>;
-		pinctrl-names = "default";
-		pinctrl-0 = <&vcc_1v8_en>;
-
+		regulator-name = "lcd-neg";
+		regulator-min-microvolt = <5400000>;
+		regulator-max-microvolt = <5400000>;
+		gpio = <&msmgpio 98 GPIO_ACTIVE_HIGH>;
 		enable-active-high;
-
-		gpio = <&msmgpio 32 GPIO_ACTIVE_HIGH>;
+		regulator-always-on;
+		regulator-boot-on;
+		pinctrl-names = "default";
+		pinctrl-0 = <&lcd_n_en_default>;
 	};
 
 	usb_id: usb-id {
@@ -294,8 +294,8 @@
 		compatible = "boe,nt51021-10-1200p";
 		reg = <0>;
 
-		iovcc-supply = <&vcc_1v8>;
-		vci-supply = <&vcc3v3_lcd>;
+		vsp-supply = <&reg_lcd_pos>;
+		vsn-supply = <&reg_lcd_neg>;
 		
 		reset-gpios = <&msmgpio 25 GPIO_ACTIVE_HIGH>;
 		backlight-gpios = <&msmgpio 109 GPIO_ACTIVE_HIGH>;
@@ -568,7 +568,7 @@
 		bias-disable;
 	};
 
-	vcc3v3_lcd_en: vcc3v3-lcd-en {
+	lcd_p_en_default: lcd-p-en-default {
 		pins = "gpio97";
 		function = "gpio";
 
@@ -576,8 +576,8 @@
 		bias-disable;
 	};
 
-	vcc_1v8_en: vcc-1v8-en {
-		pins = "gpio32";
+	lcd_n_en_default: lcd-n-en-default {
+		pins = "gpio98";
 		function = "gpio";
 
 		drive-strength = <2>;

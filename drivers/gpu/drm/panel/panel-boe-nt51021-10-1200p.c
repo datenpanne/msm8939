@@ -271,8 +271,8 @@ static int boe_nt51021_10_1200p_probe(struct mipi_dsi_device *dsi)
 	if (!ctx)
 		return -ENOMEM;
 
-	ctx->supplies[0].supply = "iovcc";
-	ctx->supplies[1].supply = "vci";
+	ctx->supplies[0].supply = "vsp";
+	ctx->supplies[1].supply = "vsn";
 	ret = devm_regulator_bulk_get(dev, ARRAY_SIZE(ctx->supplies),
 				      ctx->supplies);
 	if (ret < 0)
@@ -296,8 +296,9 @@ static int boe_nt51021_10_1200p_probe(struct mipi_dsi_device *dsi)
 	dsi->mode_flags = MIPI_DSI_MODE_VIDEO |
 			MIPI_DSI_MODE_VIDEO_BURST |
 			MIPI_DSI_MODE_VIDEO_SYNC_PULSE |
+			MIPI_DSI_MODE_VIDEO_HSE |
 			MIPI_DSI_MODE_EOT_PACKET |
-			MIPI_DSI_CLOCK_NON_CONTINUOUS |
+			//MIPI_DSI_CLOCK_NON_CONTINUOUS |
 			MIPI_DSI_MODE_LPM,
 
 	drm_panel_init(&ctx->panel, dev, &boe_nt51021_10_1200p_panel_funcs,
