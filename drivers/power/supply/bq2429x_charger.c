@@ -56,9 +56,9 @@
 #define CHIP_MP2624		0x04
 
 #define ID_BQ24296		0
-#define ID_BQ24296m		0
-#define ID_BQ24297		1
-#define ID_MP2624		2
+#define ID_BQ24296m		1
+#define ID_BQ24297		2
+#define ID_MP2624		3
 
 #define BQ2429X_MANUFACTURER	"Texas Instruments"
 
@@ -1717,12 +1717,12 @@ static int bq2429x_power_supply_init(struct bq2429x_device_info *di)
 
 static const struct of_device_id bq2429x_charger_of_match[] = {
 	{ .compatible = "ti,bq24296", .data = (void *) 0 },
-	{ .compatible = "ti,bq24296m", .data = (void *) 0 },
-	{ .compatible = "ti,bq24297", .data = (void *) 1 },
+	{ .compatible = "ti,bq24296m", .data = (void *) 1 },
+	{ .compatible = "ti,bq24297", .data = (void *) 2 },
 	/* almost the same
 	 * can control VSYS-VBATT level but not OTG max power
 	 */
-	{ .compatible = "mps,mp2624", .data = (void *) 2 },
+	{ .compatible = "mps,mp2624", .data = (void *) 3 },
 	{ },
 };
 MODULE_DEVICE_TABLE(of, bq2429x_charger_of_match);
