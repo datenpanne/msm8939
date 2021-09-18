@@ -234,6 +234,34 @@
 &blsp_i2c4 {
 	status = "okay";
 
+	charger: bq24296@6b {
+		compatible = "ti,bq24296";
+		reg = <0x6B>;
+		
+		monitored-battery = <&bat>;
+		interrupt-parent = <&msmgpio>;
+		interrupts = <62 IRQ_TYPE_EDGE_FALLING>;
+
+		pinctrl-names = "default";
+		pinctrl-0 = <&bq_int_default>;
+          
+		regulators {
+			vsys_reg: vsys_regulator {
+			regulator-name = "vsys";
+			regulator-min-microvolt = <3500000>;
+			regulator-max-microvolt = <4200000>;
+			regulator-always-on;
+			regulator-boot-on;
+			};
+			otg_reg: otg_regulator {
+			regulator-name = "otg";
+			regulator-min-microvolt = <4900000>;
+			regulator-max-microvolt = <5100000>;
+			};
+		};
+	};
+	
+
 	ncp6335d: ncp6335d-regulator@1c {
 		compatible = "onnn,ncp6335d";
 		reg = <0x1c>;
@@ -606,6 +634,14 @@
 		function = "gpio";
 
 		drive-strength = <2>;
+	};
+
+	bq_int_default: bq_int_default {
+		pins = "gpio62";
+		function = "gpio";
+
+		drive-strength = <2>;
+		bias-pull-up;
 	};
 
 	usb_id_default: usb_id_default {

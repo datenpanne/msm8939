@@ -295,7 +295,7 @@ static int boe_nt51021_10_1200p_probe(struct mipi_dsi_device *dsi)
 	dsi->format = MIPI_DSI_FMT_RGB888;
 	dsi->mode_flags = MIPI_DSI_MODE_VIDEO |
 			MIPI_DSI_MODE_VIDEO_BURST |
-			MIPI_DSI_MODE_VIDEO_SYNC_PULSE |
+			//MIPI_DSI_MODE_VIDEO_SYNC_PULSE |
 			MIPI_DSI_MODE_VIDEO_HSE |
 			MIPI_DSI_MODE_EOT_PACKET |
 			//MIPI_DSI_CLOCK_NON_CONTINUOUS |
