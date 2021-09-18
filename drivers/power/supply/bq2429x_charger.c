@@ -56,7 +56,7 @@
 #define CHIP_MP2624		0x04
 
 #define ID_BQ24296		0
-#define ID_BQ24296		1
+#define ID_BQ24296m		1
 #define ID_BQ24297		2
 #define ID_MP2624		3
 
