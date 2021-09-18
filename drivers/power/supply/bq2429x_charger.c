@@ -56,7 +56,7 @@
 #define CHIP_MP2624		0x04
 
 #define ID_BQ24296		0
-#define ID_BQ24296m		1
+#define ID_BQ24296		1
 #define ID_BQ24297		2
 #define ID_MP2624		3
 
@@ -1539,7 +1539,7 @@ static const struct power_supply_desc bq2429x_power_supply_desc[] = {
 	.set_property		= bq2429x_set_property,
 	.property_is_writeable	= bq2429x_writeable_property,
 	},
-	[ID_BQ24296] = {
+	[ID_BQ24296m] = {
 	.name			= "bq24296m",
 	.type			= POWER_SUPPLY_TYPE_USB,
 	.properties		= bq2429x_charger_props,
@@ -1717,7 +1717,7 @@ static int bq2429x_power_supply_init(struct bq2429x_device_info *di)
 
 static const struct of_device_id bq2429x_charger_of_match[] = {
 	{ .compatible = "ti,bq24296", .data = (void *) 0 },
-	{ .compatible = "ti,bq24296m", .data = (void *) 1 },
+	{ .compatible = "ti,bq24296m,", .data = (void *) 1 },
 	{ .compatible = "ti,bq24297", .data = (void *) 2 },
 	/* almost the same
 	 * can control VSYS-VBATT level but not OTG max power
