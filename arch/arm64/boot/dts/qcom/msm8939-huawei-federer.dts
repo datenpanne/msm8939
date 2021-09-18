@@ -241,7 +241,7 @@
 		monitored-battery = <&bat>;
 		interrupt-parent = <&msmgpio>;
 		interrupts = <62 IRQ_TYPE_EDGE_FALLING>;
-		dc-det = <108 IRQ_TYPE_EDGE_FALLING>;
+		dc-det = <108 GPIO_ACTIVE_LOW>;
 		
 		pinctrl-names = "default","sleep";
 		pinctrl-0 = <&bq_irq_default &bq_dc_irq_default>;
