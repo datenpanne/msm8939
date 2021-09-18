@@ -234,7 +234,7 @@
 &blsp_i2c4 {
 	status = "okay";
 
-	charger: bq24296@6b {
+	charger: bq24296m@6b {
 		compatible = "ti,bq24296m";
 		reg = <0x6b>;
 		
@@ -243,9 +243,9 @@
 		interrupts = <62 IRQ_TYPE_EDGE_FALLING>;
 		dc-det = <108 IRQ_TYPE_EDGE_FALLING>;
 		
-		pinctrl-names = "default";
-		pinctrl-0 = <&bq_int_default>;
-		pinctrl-1 = <&bq_dc_default>;
+		pinctrl-names = "default","sleep";
+		pinctrl-0 = <&bq_irq_default &bq_dc_irq_default>;
+		pinctrl-1 = <&bq_irq_sleep>;
 		
           
 		regulators {
@@ -563,7 +563,7 @@
 		pins = "gpio115";
 		function = "gpio";
 
-		drive-strength = <6>;
+		drive-strength = <2>;
 		bias-disable;
 	};
 
@@ -632,22 +632,14 @@
 		};
 	};
 
-	ext_buck_vsel: ext_buck_vsel {
+	ext_buck_vsel: ext-buck-vsel {
 		pins = "gpio111";
 		function = "gpio";
 
 		drive-strength = <2>;
 	};
-
-	bq_int_default: bq_int_default {
-		pins = "gpio62";
-		function = "gpio";
-
-		drive-strength = <2>;
-		bias-pull-up;
-	};
 	
-	bq_dc_default: bq_dc_default {
+	bq_dc_irq_default: bq-dc-irq.default {
 		pins = "gpio108";
 		function = "gpio";
 
@@ -655,7 +647,24 @@
 		bias-disable = <0>;
 	};
 
-	usb_id_default: usb_id_default {
+	bq {
+		bq_irq_default: bq-irq-default {
+			pins = "gpio62";
+			function = "gpio";
+
+			drive-strength = <2>;
+			bias-pull-up;
+		};
+		bq_irq_sleep: bq-irq-sleep {
+			pins = "gpio62";
+			function = "gpio";
+
+			drive-strength = <2>;
+			bias-pull-up;
+		};
+	};
+	
+	usb_id_default: usb-id-default {
 		pins = "gpio117";
 		function = "gpio";
 
