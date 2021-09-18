@@ -235,15 +235,18 @@
 	status = "okay";
 
 	charger: bq24296@6b {
-		compatible = "ti,bq24296";
-		reg = <0x6B>;
+		compatible = "ti,bq24296m";
+		reg = <0x6b>;
 		
 		monitored-battery = <&bat>;
 		interrupt-parent = <&msmgpio>;
 		interrupts = <62 IRQ_TYPE_EDGE_FALLING>;
-
+		dc-det = <108 IRQ_TYPE_EDGE_FALLING>;
+		
 		pinctrl-names = "default";
 		pinctrl-0 = <&bq_int_default>;
+		pinctrl-1 = <&bq_dc_default>;
+		
           
 		regulators {
 			vsys_reg: vsys_regulator {
@@ -642,6 +645,14 @@
 
 		drive-strength = <2>;
 		bias-pull-up;
+	};
+	
+	bq_dc_default: bq_dc_default {
+		pins = "gpio108";
+		function = "gpio";
+
+		drive-strength = <2>;
+		bias-disable = <0>;
 	};
 
 	usb_id_default: usb_id_default {

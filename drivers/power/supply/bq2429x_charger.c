@@ -51,10 +51,12 @@
 
 /* REG0a vendor status register value */
 #define CHIP_BQ24296		0x20
+#define CHIP_BQ24296m		0x20
 #define CHIP_BQ24297		0x60
 #define CHIP_MP2624		0x04
 
 #define ID_BQ24296		0
+#define ID_BQ24296m		0
 #define ID_BQ24297		1
 #define ID_MP2624		2
 
@@ -1537,6 +1539,15 @@ static const struct power_supply_desc bq2429x_power_supply_desc[] = {
 	.set_property		= bq2429x_set_property,
 	.property_is_writeable	= bq2429x_writeable_property,
 	},
+	[ID_BQ24296] = {
+	.name			= "bq24296m",
+	.type			= POWER_SUPPLY_TYPE_USB,
+	.properties		= bq2429x_charger_props,
+	.num_properties		= ARRAY_SIZE(bq2429x_charger_props),
+	.get_property		= bq2429x_get_property,
+	.set_property		= bq2429x_set_property,
+	.property_is_writeable	= bq2429x_writeable_property,
+	},	
 	[ID_BQ24297] = {
 	.name			= "bq24297",
 	.type			= POWER_SUPPLY_TYPE_USB,
@@ -1706,6 +1717,7 @@ static int bq2429x_power_supply_init(struct bq2429x_device_info *di)
 
 static const struct of_device_id bq2429x_charger_of_match[] = {
 	{ .compatible = "ti,bq24296", .data = (void *) 0 },
+	{ .compatible = "ti,bq24296m", .data = (void *) 0 },
 	{ .compatible = "ti,bq24297", .data = (void *) 1 },
 	/* almost the same
 	 * can control VSYS-VBATT level but not OTG max power
@@ -1759,6 +1771,7 @@ static int bq2429x_charger_probe(struct i2c_client *client,
 
 	switch (ret) {
 	case CHIP_BQ24296:
+	case CHIP_BQ24296m:
 	case CHIP_BQ24297:
 	case CHIP_MP2624:
 		break;
@@ -1839,6 +1852,7 @@ static int bq2429x_charger_remove(struct i2c_client *client)
 
 static const struct i2c_device_id bq2429x_charger_id[] = {
 	{ "bq24296", ID_BQ24296 },
+	{ "bq24296m", ID_BQ24296m },
 	{ "bq24297", ID_BQ24297 },
 	{ "mp2624", ID_MP2624 },
 	{ },
