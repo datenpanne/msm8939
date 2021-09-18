@@ -243,9 +243,9 @@
 		interrupts = <62 IRQ_TYPE_EDGE_FALLING>;
 		//dc-det = <108 GPIO_ACTIVE_LOW>;
 		
-		pinctrl-names = "default","sleep";
+		pinctrl-names = "default";
 		pinctrl-0 = <&bq_irq_default>; // &bq_dc_irq_default>;
-		pinctrl-1 = <&bq_irq_sleep>;
+		//pinctrl-1 = <&bq_irq_sleep>;
 		
           
 		regulators {
@@ -647,7 +647,7 @@
 		bias-disable = <0>;
 	}; */
 
-	bq {
+	/*bq {
 		bq_irq_default: bq-irq-default {
 			pins = "gpio62";
 			function = "gpio";
@@ -662,8 +662,16 @@
 			drive-strength = <2>;
 			bias-pull-up;
 		};
-	};
+	};*/
 	
+	bq_irq_default: bq-irq-default {
+		pins = "gpio62";
+		function = "gpio";
+
+		drive-strength = <2>;
+		bias-pull-up;
+	};
+
 	usb_id_default: usb-id-default {
 		pins = "gpio117";
 		function = "gpio";
