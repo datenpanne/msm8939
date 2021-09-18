@@ -50,7 +50,7 @@
 #define CHRG_CHRGE_DONE		3
 
 /* REG0a vendor status register value */
-#define CHIP_BQ24296m		0x20
+#define CHIP_BQ24296M		0x20
 #define CHIP_BQ24297		0x60
 #define CHIP_MP2624		0x04
 
@@ -1612,7 +1612,7 @@ static int bq2429x_parse_dt(struct bq2429x_device_info *di)
 	}
 
 	if (ret != ARRAY_SIZE(bq2429x_regulator_matches)) {
-		dev_err(di->dev, "Found %d but expected %d regulators\n",
+		dev_err(di->dev, "Found %d but expected %ld regulators\n",
 			ret, ARRAY_SIZE(bq2429x_regulator_matches));
 		return -EINVAL;
 	}
@@ -1758,7 +1758,7 @@ static int bq2429x_charger_probe(struct i2c_client *client,
 	}
 
 	switch (ret) {
-	case CHIP_BQ24296:
+	case CHIP_BQ24296M:
 	case CHIP_BQ24297:
 	case CHIP_MP2624:
 		break;
