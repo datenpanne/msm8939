@@ -247,7 +247,6 @@
 		pinctrl-0 = <&bq_irq_default>; // &bq_dc_irq_default>;
 		//pinctrl-1 = <&bq_irq_sleep>;
 		
-          
 		regulators {
 			vsys_reg: vsys_regulator {
 			regulator-name = "vsys";

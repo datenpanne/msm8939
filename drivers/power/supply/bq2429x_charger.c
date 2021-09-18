@@ -51,7 +51,6 @@
 
 /* REG0a vendor status register value */
 #define CHIP_BQ24296		0x20
-#define CHIP_BQ24296m		0x20
 #define CHIP_BQ24297		0x60
 #define CHIP_MP2624		0x04
 
@@ -1539,7 +1538,7 @@ static const struct power_supply_desc bq2429x_power_supply_desc[] = {
 	.set_property		= bq2429x_set_property,
 	.property_is_writeable	= bq2429x_writeable_property,
 	},
-	[ID_BQ24296m] = {
+	[ID_BQ24296M] = {
 	.name			= "bq24296m",
 	.type			= POWER_SUPPLY_TYPE_USB,
 	.properties		= bq2429x_charger_props,
@@ -1771,7 +1770,6 @@ static int bq2429x_charger_probe(struct i2c_client *client,
 
 	switch (ret) {
 	case CHIP_BQ24296:
-	case CHIP_BQ24296m:
 	case CHIP_BQ24297:
 	case CHIP_MP2624:
 		break;
