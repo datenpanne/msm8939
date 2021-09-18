@@ -1850,7 +1850,6 @@ static int bq2429x_charger_remove(struct i2c_client *client)
 
 static const struct i2c_device_id bq2429x_charger_id[] = {
 	{ "bq24296", ID_BQ24296 },
-	{ "bq24296m", ID_BQ24296m },
 	{ "bq24297", ID_BQ24297 },
 	{ "mp2624", ID_MP2624 },
 	{ },
