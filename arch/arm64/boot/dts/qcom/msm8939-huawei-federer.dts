@@ -221,35 +221,33 @@
 &blsp_i2c4 {
 	status = "okay";
 
-	charger: bq24296m@6B {
-		compatible = "ti,bq24296m";
+	charger: bq24296@6B {
+		compatible = "ti,bq24296";
 		reg = <0x6B>;
 		
 		monitored-battery = <&bat>;
 		interrupt-parent = <&msmgpio>;
 		interrupts = <62 IRQ_TYPE_EDGE_FALLING>;
-		dc-det = <108 GPIO_ACTIVE_LOW>;
+		//dc-det = <108 GPIO_ACTIVE_LOW>;
 		
-		pinctrl-names = "default";
-		pinctrl-0 = <&bq_irq_default &bq_dc_irq_default>;
+		pinctrl-names = "default", "sleep";
+		pinctrl-0 = <&bq_irq_default>// &bq_dc_irq_default>;
 		pinctrl-1 = <&bq_irq_sleep>;
 		
-		regulators {
-			vsys_reg: vsys_regulator {
-				regulator-compatible = "bq2429x-vsys";
-				regulator-name = "vsys";
-				regulator-min-microvolt = <3500000>;
-				regulator-max-microvolt = <4200000>;
-				regulator-always-on;
-				regulator-boot-on;
-			};
-			otg_reg: otg_regulator {
-				regulator-compatible = "bq2429x-otg";
-				regulator-name = "otg";
-				regulator-min-microvolt = <4900000>;
-				regulator-max-microvolt = <5100000>;
-			};
-		};
+		ti,bq2429x,usb-vlim = <4400>;
+		ti,bq2429x,usb-ilim = <500>;
+		ti,bq2429x,usb-ichg = <500>;
+			ti,bq2429x,usb-vreg = <4200>;
+
+		ti,bq2429x,ta-vlim = <4400>;
+		ti,bq2429x,ta-ilim = <2000>;
+		ti,bq2429x,ta-ichg = <2000>;
+			ti,bq2429x,ta-vreg = <4200>;		
+			
+		ti,bq2429x,precharge-current = <180>;
+		ti,bq2429x,termination-current = <180>;
+		ti,bq2429x,boost-volt = <5000>;
+		ti,bq2429x,enable_term;
 	};
 
 	ncp6335d: ncp6335d-regulator@1c {
@@ -620,13 +618,13 @@
 		drive-strength = <2>;
 	};
 	
-	bq_dc_irq_default: bq-dc-irq-default {
+	/*bq_dc_irq_default: bq-dc-irq-default {
 		pins = "gpio108";
 		function = "gpio";
 
 		drive-strength = <2>;
 		bias-disable = <0>;
-	};
+	};*/
 
 	bq {
 		bq_irq_default: bq-irq-default {
