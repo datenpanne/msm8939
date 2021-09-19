@@ -424,11 +424,12 @@
 &usb {
 	status = "okay";
 	extcon = <&usb_id>, <&usb_id>;
-	vbus-supply = <&otg_reg>;
+	//vbus-supply = <&otg_reg>;
 };
 
 &usb_hs_phy {
-	extcon = <&charger>;
+	//extcon = <&charger>;
+	extcon = <&usb_id>;
 };
 
 &wcd_codec {
