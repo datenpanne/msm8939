@@ -50,18 +50,18 @@
 		compatible = "simple-battery";
 		voltage-min-design-microvolt = <3400000>;
 		voltage-max-design-microvolt = <4350000>;
-		energy-full-design-microwatt-hours = <11400000>;
-		charge-full-design-microamp-hours = <3000000>;
+		energy-full-design-microwatt-hours = <24700000>;
+		charge-full-design-microamp-hours = <6500000>;
 
 		ocv-capacity-celsius = <25>;
 		ocv-capacity-table-0 = <4314000 100>, <4252000 95>, <4197000 90>,
-			<4143000 85>, <4092000 80>, <4044000 75>, <3999000 70>,
-			<3953000 65>, <3905000 60>, <3868000 55>, <3841000 50>,
-			<3818000 45>, <3799000 40>, <3783000 35>, <3767000 30>,
-			<3748000 25>, <3724000 20>, <3699000 16>, <3678000 13>,
-			<3671000 11>, <3668000 10>, <3664000 9>, <3659000 8>,
-			<3649000 7>, <3627000 6>, <3588000 5>, <3535000 4>,
-			<3469000 3>, <3381000 2>, <3252000 1>, <3000000 0>;
+					<4143000 85>, <4092000 80>, <4044000 75>, <3999000 70>,
+					<3953000 65>, <3905000 60>, <3868000 55>, <3841000 50>,
+					<3818000 45>, <3799000 40>, <3783000 35>, <3767000 30>,
+					<3748000 25>, <3724000 20>, <3699000 16>, <3678000 13>,
+					<3671000 11>, <3668000 10>, <3664000 9>, <3659000 8>,
+					<3649000 7>, <3627000 6>, <3588000 5>, <3535000 4>,
+					<3469000 3>, <3381000 2>, <3252000 1>, <3000000 0>;
 	};
 
 	gpio-keys {
@@ -202,19 +202,6 @@
 
 &blsp_i2c2 {
 	status = "okay";
-
-	magnetometer@c {
-		compatible = "asahi-kasei,ak09911";
-		reg = <0x0c>;
-
-		vdd-supply = <&pm8916_l17>;
-		vid-supply = <&pm8916_l6>;
-
-		reset-gpios = <&msmgpio 36 GPIO_ACTIVE_LOW>;
-
-		pinctrl-names = "default";
-		pinctrl-0 = <&mag_reset_default>;
-	};
 	
 	accelerometer@1f {
 		compatible = "kionix,kx023-1025";
@@ -234,7 +221,7 @@
 &blsp_i2c4 {
 	status = "okay";
 
-	charger: bq24296m@6b {
+	charger: bq24296m@6B {
 		compatible = "ti,bq24296m";
 		reg = <0x6B>;
 		
@@ -249,20 +236,21 @@
 		
 		regulators {
 			vsys_reg: vsys_regulator {
-			regulator-name = "vsys";
-			regulator-min-microvolt = <3500000>;
-			regulator-max-microvolt = <4200000>;
-			regulator-always-on;
-			regulator-boot-on;
+				regulator-compatible = "bq2429x-vsys";
+				regulator-name = "vsys";
+				regulator-min-microvolt = <3500000>;
+				regulator-max-microvolt = <4200000>;
+				regulator-always-on;
+				regulator-boot-on;
 			};
 			otg_reg: otg_regulator {
-			regulator-name = "otg";
-			regulator-min-microvolt = <4900000>;
-			regulator-max-microvolt = <5100000>;
+				regulator-compatible = "bq2429x-otg";
+				regulator-name = "otg";
+				regulator-min-microvolt = <4900000>;
+				regulator-max-microvolt = <5100000>;
 			};
 		};
 	};
-	
 
 	ncp6335d: ncp6335d-regulator@1c {
 		compatible = "onnn,ncp6335d";
@@ -315,9 +303,9 @@
 };
 
 &dsi0 {
-	status = "okay";
-	#address-cells = <1>;
-	#size-cells = <0>;
+	pinctrl-names = "default", "sleep";
+	pinctrl-0 = <&mdss_default>;
+	pinctrl-1 = <&mdss_sleep>;
 	
 	panel@0 {
 		status = "okay";
@@ -436,6 +424,11 @@
 &usb {
 	status = "okay";
 	extcon = <&usb_id>, <&usb_id>;
+	vbus-supply = <&otg_reg>;
+};
+
+&usb_hs_phy {
+	extcon = <&charger>;
 };
 
 &wcd_codec {
@@ -444,10 +437,6 @@
 	qcom,mbhc-vthreshold-high = <75 150 237 450 500>;
 	qcom,micbias1-ext-cap;
 	qcom,hphl-jack-type-normally-open;
-};
-
-&usb_hs_phy {
-	extcon = <&usb_id>;
 };
 
 &smd_rpm_regulators {
@@ -576,14 +565,6 @@
 
 	gpio_leds_default: gpio-leds-default {
 		pins = "gpio8", "gpio9", "gpio10";
-		function = "gpio";
-
-		drive-strength = <2>;
-		bias-disable;
-	};
-
-	mag_reset_default: mag-reset-default {
-		pins = "gpio36";
 		function = "gpio";
 
 		drive-strength = <2>;
