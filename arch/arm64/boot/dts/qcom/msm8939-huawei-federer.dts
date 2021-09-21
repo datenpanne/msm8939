@@ -170,7 +170,7 @@
 	backlight: backlight {
 		compatible = "pwm-backlight";
 		pwms = <&pm8916_pwm 0 500000>;
-		enable-gpios = <&msmgpio 109 GPIO_ACTIVE_HIGH>;
+		//enable-gpios = <&msmgpio 109 GPIO_ACTIVE_HIGH>;
 		//power-supply = <&reg_bl_pp5000>;
 		brightness-levels = <0 16 18 20 22 24 26 29 32 35 38 42 46 51 56 62 68 75 83 91 100>;
 		default-brightness-level = <15>;
@@ -178,14 +178,25 @@
 		//pinctrl-0 = <&pwm0_pin_default>;
 	};
 
-	reg_bl_pp5000: regulator-bl-pp5000 {
+	pp1800_lcd: pp1800-lcd {
+		compatible = "regulator-fixed";
+		regulator-name = "pp1800_lcd";
+		pinctrl-names = "default";
+		pinctrl-0 = <&pp1800_lcd_en>;
+
+		enable-active-high;
+
+		gpio = <&msmgpio 109 GPIO_ACTIVE_HIGH>;
+	};
+
+	/*reg_bl_pp5000: regulator-bl-pp5000 {
 		compatible = "regulator-fixed";
 		regulator-name = "bl_pp5000";
 		regulator-min-microvolt = <5000000>;
 		regulator-max-microvolt = <5000000>;
 		regulator-always-on;
 		regulator-boot-on;
-	};
+	};*/
 
 	/*reg_lcd_pos: regulator-lcd-pos {
 		compatible = "regulator-fixed";
@@ -332,9 +343,11 @@
 		reg = <0>;
 
 		backlight = <&backlight>;
+
 		vci-supply = <&pm8916_l17>;
 		iovcc-supply = <&pm8916_l6>;
-		
+		pp1800-supply = <&pp1800_lcd>;
+
 		reset-gpios = <&msmgpio 25 GPIO_ACTIVE_HIGH>;
 		/*backlight-gpios = <&msmgpio 109 GPIO_ACTIVE_HIGH>;
 
@@ -606,14 +619,6 @@
 		bias-disable;
 	};*/
 
-	pwm0_pin_default: pwm0-pin-default {
-		pins = "gpio109";
-		function = "gpio";
-
-		drive-strength = <2>;
-		bias-pull-up;
-	};
-
 	/*lcd_p_en_default: lcd-p-en-default {
 		pins = "gpio97";
 		function = "gpio";
@@ -629,6 +634,14 @@
 		drive-strength = <2>;
 		bias-disable;
 	};*/
+
+	pp1800_lcd_en: pp1800-lcd-en {
+		pins = "gpio109";
+		function = "gpio";
+
+		drive-strength = <2>;
+		bias-disable;
+	};
 
 	mdss {
 		mdss_default: mdss-default {
