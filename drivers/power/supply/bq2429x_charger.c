@@ -42,7 +42,7 @@ enum bq2429x_vbus_type {
 	BQ2429X_VBUS_NONE = REG08_VBUS_TYPE_NONE,
 	BQ2429X_VBUS_USB = REG08_VBUS_TYPE_USB,
 	BQ2429X_VBUS_ADAPTER = REG08_VBUS_TYPE_ADAPTER,
-	BQ2429X_VBUS_OTG = REG08_VBUS_TYPE_OTG,
+	/*BQ2429X_VBUS_OTG = REG08_VBUS_TYPE_OTG,*/ -->> disable otg for now
 };
 
 enum bq2429x_part_no {
@@ -66,7 +66,6 @@ enum {
 	BATT_TUNE	= BIT(4),
 };
 
-
 struct bq2429x {
 	struct device *dev;
 	struct i2c_client *client;
@@ -89,7 +88,7 @@ struct bq2429x {
 	bool power_good;
 
 	bool charge_enabled;
-	bool otg_enabled;
+	/*bool otg_enabled;*/ disable OTG
 	bool batfet_enabled;
 
 	bool dpm_triggered;
@@ -114,13 +113,12 @@ struct bq2429x {
 	struct power_supply_desc ac_psy_desc;
 	struct power_supply *ac_psy;
 
-	struct power_supply_desc otg_psy_desc;
-	struct power_supply *otg_psy;
+	/*struct power_supply_desc otg_psy_desc;
+	struct power_supply *otg_psy;*/ disable OTG
 
 	struct power_supply *batt_psy;
 
 };
-
 
 static int bq2429x_read_byte(struct bq2429x *bq, u8 reg, u8 *data)
 {
@@ -165,7 +163,8 @@ static int bq2429x_update_bits(struct bq2429x *bq, u8 reg, u8 mask, u8 data)
 
 	return bq2429x_write_byte(bq, reg, tmp);
 }
-static int bq2429x_enable_otg(struct bq2429x *bq)
+/* disable OTG*/
+/*static int bq2429x_enable_otg(struct bq2429x *bq)
 {
 	u8 val = REG01_OTG_ENABLE << REG01_OTG_CONFIG_SHIFT;
 
@@ -184,8 +183,7 @@ static int bq2429x_disable_otg(struct bq2429x *bq)
 
 }
 EXPORT_SYMBOL_GPL(bq2429x_disable_otg);
-
-
+*/
 static int bq2429x_enable_charger(struct bq2429x *bq)
 {
 	int ret;
@@ -234,7 +232,6 @@ int bq2429x_set_term_current(struct bq2429x *bq, int curr)
 	return bq2429x_update_bits(bq, BQ2429X_REG_03, REG03_ITERM_MASK, iterm);
 }
 
-
 int bq2429x_set_prechg_current(struct bq2429x *bq, int curr)
 {
 	u8 iprechg;
@@ -261,7 +258,6 @@ int bq2429x_set_chargevoltage(struct bq2429x *bq, int volt)
 
 	return bq2429x_update_bits(bq, BQ2429X_REG_04, REG04_VREG_MASK, val);
 }
-
 
 int bq2429x_set_input_volt_limit(struct bq2429x *bq, int volt)
 {
@@ -310,7 +306,6 @@ int bq2429x_set_input_current_limit(struct bq2429x *bq, int curr)
 
 	return bq2429x_update_bits(bq, BQ2429X_REG_00, REG00_IINLIM_MASK, val);
 }
-
 
 int bq2429x_set_watchdog_timer(struct bq2429x *bq, u8 timeout)
 {
@@ -385,7 +380,6 @@ int bq2429x_get_hiz_mode(struct bq2429x *bq, u8 *state)
 }
 EXPORT_SYMBOL_GPL(bq2429x_get_hiz_mode);
 
-
 static int bq2429x_enable_term(struct bq2429x *bq, bool enable)
 {
 	u8 val;
@@ -413,8 +407,8 @@ int bq2429x_set_boost_volt(struct bq2429x *bq, int volt)
 	return bq2429x_update_bits(bq, BQ2429X_REG_06, REG06_BOOSTV_MASK, val);
 }
 
-
-void bq2429x_set_otg(struct bq2429x *bq, bool enable)
+/* disable OTG*/
+/*void bq2429x_set_otg(struct bq2429x *bq, bool enable)
 {
 	int ret;
 
@@ -429,7 +423,7 @@ void bq2429x_set_otg(struct bq2429x *bq, bool enable)
 		dev_err(bq->dev, "%s:Failed to %s otg:%d\n", __func__,
 				enable ? "enable" : "disable", ret);
 }
-
+*/
 static int bq2429x_charging_disable(struct bq2429x *bq, int reason,
 						int disable)
 {
@@ -507,7 +501,6 @@ static ssize_t bq2429x_store_register(struct device *dev,
 	return count;
 }
 
-
 static DEVICE_ATTR(registers, 0660, bq2429x_show_registers, bq2429x_store_register);
 
 static struct attribute *bq2429x_attributes[] = {
@@ -565,7 +558,6 @@ static enum power_supply_property bq2429x_charger_props[] = {
 	POWER_SUPPLY_PROP_CHARGING_ENABLED,	
 	POWER_SUPPLY_PROP_TYPE,
 };
-
 
 static int bq2429x_usb_get_property(struct power_supply *psy,
 			enum power_supply_property psp,
@@ -666,8 +658,8 @@ static int bq2429x_ac_get_property(struct power_supply *psy,
 
 	return 0;
 }
-
-static enum power_supply_property bq2429x_otg_props[] = {
+/* disable OTG*/
+/*static enum power_supply_property bq2429x_otg_props[] = {
 	POWER_SUPPLY_PROP_ONLINE,
 };
 
@@ -719,8 +711,7 @@ static int bq2429x_otg_is_writeable(struct power_supply *psy,
 	}
 
 	return ret;
-}
-
+}*/
 
 static char *bq2429x_supplied_to[] = {
 	"battery",
@@ -758,8 +749,8 @@ static int bq2429x_psy_register(struct bq2429x *bq)
 		pr_err("failed to register ac psy\n");
 		return PTR_ERR(bq->ac_psy);
 	}
-
-	bq->otg_psy_desc.name = "otg";
+/* disable OTG*/
+	/*bq->otg_psy_desc.name = "otg";
 	bq->otg_psy_desc.type = POWER_SUPPLY_TYPE_OTG;
 	bq->otg_psy_desc.properties = bq2429x_otg_props;
 	bq->otg_psy_desc.num_properties = ARRAY_SIZE(bq2429x_otg_props);
@@ -771,11 +762,10 @@ static int bq2429x_psy_register(struct bq2429x *bq)
 	if (IS_ERR(bq->otg_psy)) {
 		pr_err("failed to register otg psy\n");
 		return PTR_ERR(bq->otg_psy);
-	}
+	}*/
 
 	return 0;
 }
-
 
 static struct bq2429x_platform_data *bq2429x_parse_dt(struct device *dev, struct bq2429x *bq)
 {
@@ -868,7 +858,6 @@ static int bq2429x_init_device(struct bq2429x *bq)
 	return 0;
 }
 
-
 static int bq2429x_detect_device(struct bq2429x *bq)
 {
 	int ret;
@@ -900,7 +889,7 @@ static void bq2429x_update_status(struct bq2429x *bq)
 		return;
 	mutex_lock(&bq->data_lock);
 	bq->charge_enabled = !!(status & REG01_CHG_CONFIG_MASK);
-	bq->otg_enabled = !!(status & REG01_OTG_CONFIG_MASK);
+	/*bq->otg_enabled = !!(status & REG01_OTG_CONFIG_MASK);*/ disable OTG
 	mutex_unlock(&bq->data_lock);
 
 	ret = bq2429x_read_byte(bq, BQ2429X_REG_08, &status);
@@ -961,7 +950,6 @@ static void bq2429x_update_status(struct bq2429x *bq)
 
 	pr_info("%s\n", charge_stat_str[bq->charge_state]);
 }
-
 
 static void bq2429x_dump_registers(struct bq2429x *bq)
 {
@@ -1158,7 +1146,6 @@ err_1:
 	return ret;
 }
 
-
 static void bq2429x_charger_shutdown(struct i2c_client *client)
 {
 	struct bq2429x *bq = i2c_get_clientdata(client);
@@ -1168,6 +1155,7 @@ static void bq2429x_charger_shutdown(struct i2c_client *client)
 	cancel_delayed_work_sync(&bq->monitor_work);
 
 }
+
 static struct of_device_id bq2429x_charger_match_table[] = {
 	{.compatible = "ti,bq24295",},
 	{.compatible = "ti,bq24296",},

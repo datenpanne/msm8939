@@ -165,8 +165,28 @@
 			reg = <0 0xffc00000 0 0x400000>;
 		};
 	};
+	
+	backlight: backlight {
+		compatible = "pwm-backlight";
+		pwms = <&pwm0 0 500000>;
+		enable-gpios = <&msmgpio 109 GPIO_ACTIVE_HIGH>;
+		power-supply = <&reg_bl_pp5000>;
+		brightness-levels = <0 16 18 20 22 24 26 29 32 35 38 42 46 51 56 62 68 75 83 91 100>;
+		default-brightness-level = <15>;
+		pinctrl-names = "default";
+		pinctrl-0 = <&pwm0_pin_default>;
+	};
 
-	reg_lcd_pos: regulator-lcd-pos {
+	reg_bl_pp5000: regulator-bl-pp5000 {
+		compatible = "regulator-fixed";
+		regulator-name = "bl_pp5000";
+		regulator-min-microvolt = <5000000>;
+		regulator-max-microvolt = <5000000>;
+		regulator-always-on;
+		regulator-boot-on;
+	};
+
+	/*reg_lcd_pos: regulator-lcd-pos {
 		compatible = "regulator-fixed";
 		regulator-name = "lcd-pos";
 		regulator-min-microvolt = <5400000>;
@@ -190,7 +210,7 @@
 		regulator-boot-on;
 		pinctrl-names = "default";
 		pinctrl-0 = <&lcd_n_en_default>;
-	};
+	};*/
 
 	usb_id: usb-id {
 		compatible = "linux,extcon-usb-gpio";
@@ -310,14 +330,15 @@
 		compatible = "boe,nt51021-10-1200p";
 		reg = <0>;
 
-		vsp-supply = <&reg_lcd_pos>;
-		vsn-supply = <&reg_lcd_neg>;
+		backlight = <&backlight>;
+		vci-supply = <&pm8916_l17>;
+		iovcc-supply = <&pm8916_l6>;
 		
 		reset-gpios = <&msmgpio 25 GPIO_ACTIVE_HIGH>;
-		backlight-gpios = <&msmgpio 109 GPIO_ACTIVE_HIGH>;
+		/*backlight-gpios = <&msmgpio 109 GPIO_ACTIVE_HIGH>;
 
 		pinctrl-names = "default";
-		pinctrl-0 = <&lcd_bl_en_default>;
+		pinctrl-0 = <&lcd_bl_en_default>;*/
 
 		port {
 			panel_in: endpoint {
@@ -356,6 +377,10 @@
 };
 
 &pm8916_vib {
+	status = "okay";
+};
+
+&pwm0 {
 	status = "okay";
 };
 
@@ -570,15 +595,23 @@
 		bias-disable;
 	};
 
-	lcd_bl_en_default: lcd-bl-en-default {
+	/*lcd_bl_en_default: lcd-bl-en-default {
 		pins = "gpio109";
 		function = "gpio";
 
 		drive-strength = <2>;
 		bias-disable;
+	};*/
+
+	pwm0_pin_default: pwm0-pin-default {
+		pins = "gpio109";
+		function = "gpio";
+
+		drive-strength = <2>;
+		bias-pull-up;
 	};
 
-	lcd_p_en_default: lcd-p-en-default {
+	/*lcd_p_en_default: lcd-p-en-default {
 		pins = "gpio97";
 		function = "gpio";
 
@@ -592,7 +625,7 @@
 
 		drive-strength = <2>;
 		bias-disable;
-	};
+	};*/
 
 	mdss {
 		mdss_default: mdss-default {

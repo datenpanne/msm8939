@@ -28,7 +28,6 @@ config POWER_SUPPLY_HWMON
 	  Say 'Y' here if you want power supplies to
 	  have hwmon sysfs interface too.
 
-
 config PDA_POWER
 	tristate "Generic PDA/phone power driver"
 	depends on !S390
@@ -661,7 +660,7 @@ config CHARGER_BQ24735
           depends on GPIOLIB || COMPILE_TEST
           depends on REGMAP_I2C
           help
-            Say Y to enable support for the TI BQ24296/297 battery charger.
+            Say Y to enable support for the TI BQ24295/296/297 battery charger.
 
 config CHARGER_BQ2515X
 	tristate "TI BQ2515X battery charger family"

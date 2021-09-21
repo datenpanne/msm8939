@@ -29,16 +29,12 @@ enum bq2429x_input_current_limit {
 	BQ2429X_ILIM_3000mA	= 3000,
 };
 
-
 struct bq2429x_charge_param {
 	int vlim;
 	int ilim;
 	int ichg;
 	int vreg;
 };
-
-
-
 
 struct bq2429x_platform_data {
 	struct bq2429x_charge_param usb;
