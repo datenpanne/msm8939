@@ -42,7 +42,10 @@ struct panel_desc {
 struct boe_panel {
 	struct drm_panel base;
 	struct mipi_dsi_device *dsi;
+
 	const struct panel_desc *desc;
+
+	enum drm_panel_orientation orientation;
 	struct regulator *pp1800;
 	struct regulator *vci;
 	struct regulator *iovcc;
@@ -408,7 +411,6 @@ static int boe_panel_init_dcs_cmd(struct boe_panel *boe)
 			}
 		}
 	}
-
 	return 0;
 }
 
@@ -546,7 +548,7 @@ static const struct panel_desc boe_nt51021_10_desc = {
 	.bpc = 8,
 	.size = {
 		.width_mm = 135,
-		.height_mm = 216,
+		.height_mm = 217,
 	},
 	.lanes = 4,
 	.format = MIPI_DSI_FMT_RGB888,
@@ -582,6 +584,7 @@ static int boe_panel_get_modes(struct drm_panel *panel,
 	connector->display_info.width_mm = boe->desc->size.width_mm;
 	connector->display_info.height_mm = boe->desc->size.height_mm;
 	connector->display_info.bpc = boe->desc->bpc;
+	drm_connector_set_panel_orientation(connector, boe->orientation);
 
 	return 1;
 }
@@ -621,6 +624,11 @@ static int boe_panel_add(struct boe_panel *boe)
 
 	drm_panel_init(&boe->base, dev, &boe_panel_funcs,
 		       DRM_MODE_CONNECTOR_DSI);
+	err = of_drm_get_panel_orientation(dev->of_node, &boe->orientation);
+	if (err < 0) {
+		dev_err(dev, "%pOF: failed to get orientation %d\n", dev->of_node, err);
+		return err;
+	}
 
 	err = drm_panel_of_backlight(&boe->base);
 	if (err)
@@ -629,7 +637,9 @@ static int boe_panel_add(struct boe_panel *boe)
 	boe->base.funcs = &boe_panel_funcs;
 	boe->base.dev = &boe->dsi->dev;
 
-	return drm_panel_add(&boe->base);
+	drm_panel_add(&boe->base);
+
+	return 0;
 }
 
 static int boe_panel_probe(struct mipi_dsi_device *dsi)
@@ -678,7 +688,7 @@ static int boe_panel_remove(struct mipi_dsi_device *dsi)
 
 	ret = mipi_dsi_detach(dsi);
 	if (ret < 0)
-		dev_err(&dsi->dev, "Failed to detach from DSI host: %d\n", ret);
+		dev_err(&dsi->dev, "failed to detach from DSI host: %d\n", ret);
 
 	if (boe->base.dev)
 		drm_panel_remove(&boe->base);
