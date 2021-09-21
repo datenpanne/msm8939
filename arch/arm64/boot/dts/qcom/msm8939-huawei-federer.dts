@@ -8,6 +8,7 @@
 #include <dt-bindings/input/input.h>
 #include <dt-bindings/interrupt-controller/irq.h>
 #include <dt-bindings/leds/common.h>
+#include <dt-bindings/pinctrl/qcom,pmic-mpp.h>
 #include <dt-bindings/sound/apq8016-lpass.h>
 
 / {
@@ -168,13 +169,13 @@
 	
 	backlight: backlight {
 		compatible = "pwm-backlight";
-		pwms = <&pwm0 0 500000>;
+		pwms = <&pm8916_pwm 0 500000>;
 		enable-gpios = <&msmgpio 109 GPIO_ACTIVE_HIGH>;
-		power-supply = <&reg_bl_pp5000>;
+		//power-supply = <&reg_bl_pp5000>;
 		brightness-levels = <0 16 18 20 22 24 26 29 32 35 38 42 46 51 56 62 68 75 83 91 100>;
 		default-brightness-level = <15>;
-		pinctrl-names = "default";
-		pinctrl-0 = <&pwm0_pin_default>;
+		//pinctrl-names = "default";
+		//pinctrl-0 = <&pwm0_pin_default>;
 	};
 
 	reg_bl_pp5000: regulator-bl-pp5000 {
@@ -380,8 +381,10 @@
 	status = "okay";
 };
 
-&pwm0 {
+&pm8916_pwm {
 	status = "okay";
+	pinctrl-names = "default";
+	pinctrl-0 = <&pwm_out>;
 };
 
 &pronto {
@@ -682,5 +685,16 @@
 
 		drive-strength = <8>;
 		bias-pull-up;
+	};
+};
+
+&pm8916_mpps {
+	pwm_out: mpp4 {
+		pins = "mpp4";
+		function = "digital";
+
+		output-low;
+		qcom,dtest = <1>;
+		power-source = <PM8916_MPP_VPH>;
 	};
 };
