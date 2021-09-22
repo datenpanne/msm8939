@@ -1540,8 +1540,8 @@
 			interrupt-names = "wdog", "fatal", "ready",
 					  "handover", "stop-ack";
 
-			power-domains = <&rpmpd MSM8939_VDDMDCX_AO>,
-					<&rpmpd MSM8939_VDDMX>;
+			power-domains = <&rpmpd MSM8916_VDDCX>,
+					<&rpmpd MSM8916_VDDMX>;
 			power-domain-names = "cx", "mx";
 			pll-supply = <&pm8916_l7>;
 
@@ -1786,7 +1786,7 @@
 			status = "disabled";
 		};
 
-		blsp_dma: dma@7884000 {
+		blsp_dma: dma-controller@7884000 {
 			compatible = "qcom,bam-v1.7.0";
 			reg = <0x07884000 0x23000>;
 			interrupts = <GIC_SPI 238 IRQ_TYPE_LEVEL_HIGH>;
@@ -1912,8 +1912,8 @@
 
 		blsp_spi3: spi@78b7000 {
 			compatible = "qcom,spi-qup-v2.2.1";
-			reg = <0x078b7000 0x600>;
-			interrupts = <GIC_SPI 95 IRQ_TYPE_LEVEL_HIGH>;
+			reg = <0x078b7000 0x500>;
+			interrupts = <GIC_SPI 97 IRQ_TYPE_LEVEL_HIGH>;
 			clocks = <&gcc GCC_BLSP1_QUP3_SPI_APPS_CLK>,
 				 <&gcc GCC_BLSP1_AHB_CLK>;
 			clock-names = "core", "iface";
@@ -2082,8 +2082,8 @@
 					      <&wcnss_smp2p_in 3 IRQ_TYPE_EDGE_RISING>;
 			interrupt-names = "wdog", "fatal", "ready", "handover", "stop-ack";
 
-			power-domains = <&rpmpd MSM8939_VDDCX>,
-					<&rpmpd MSM8939_VDDMX_AO>;
+			power-domains = <&rpmpd MSM8916_VDDCX>,
+					<&rpmpd MSM8916_VDDMX_AO>;
 			power-domain-names = "vddcx", "vddmx";
 			vddpx-supply = <&pm8916_l7>;
 

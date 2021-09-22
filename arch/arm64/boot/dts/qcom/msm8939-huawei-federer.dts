@@ -47,7 +47,7 @@
 		};
 	};
 
-	/*bat: battery {
+	bat: battery {
 		compatible = "simple-battery";
 		voltage-min-design-microvolt = <3400000>;
 		voltage-max-design-microvolt = <4350000>;
@@ -63,7 +63,7 @@
 					<3671000 11>, <3668000 10>, <3664000 9>, <3659000 8>,
 					<3649000 7>, <3627000 6>, <3588000 5>, <3535000 4>,
 					<3469000 3>, <3381000 2>, <3252000 1>, <3000000 0>;
-	};*/
+	};
 
 	gpio-keys {
 		compatible = "gpio-keys";
@@ -171,7 +171,7 @@
 		compatible = "pwm-backlight";
 		pwms = <&pm8916_pwm 0 500000>;
 		//enable-gpios = <&msmgpio 109 GPIO_ACTIVE_HIGH>;
-		//power-supply = <&reg_bl_pp5000>;
+		power-supply = <&reg_bl_pp5000>;
 		brightness-levels = <0 16 18 20 22 24 26 29 32 35 38 42 46 51 56 62 68 75 83 91 100>;
 		default-brightness-level = <15>;
 		//pinctrl-names = "default";
@@ -189,40 +189,14 @@
 		gpio = <&msmgpio 109 GPIO_ACTIVE_HIGH>;
 	};
 
-	/*reg_bl_pp5000: regulator-bl-pp5000 {
+	reg_bl_pp5000: regulator-bl-pp5000 {
 		compatible = "regulator-fixed";
 		regulator-name = "bl_pp5000";
 		regulator-min-microvolt = <5000000>;
 		regulator-max-microvolt = <5000000>;
 		regulator-always-on;
 		regulator-boot-on;
-	};*/
-
-	/*reg_lcd_pos: regulator-lcd-pos {
-		compatible = "regulator-fixed";
-		regulator-name = "lcd-pos";
-		regulator-min-microvolt = <5400000>;
-		regulator-max-microvolt = <5400000>;
-		gpio = <&msmgpio 97 GPIO_ACTIVE_HIGH>;
-		enable-active-high;
-		regulator-always-on;
-		regulator-boot-on;
-		pinctrl-names = "default";
-		pinctrl-0 = <&lcd_p_en_default>;
 	};
-
-	reg_lcd_neg: regulator-lcd-neg {
-		compatible = "regulator-fixed";
-		regulator-name = "lcd-neg";
-		regulator-min-microvolt = <5400000>;
-		regulator-max-microvolt = <5400000>;
-		gpio = <&msmgpio 98 GPIO_ACTIVE_HIGH>;
-		enable-active-high;
-		regulator-always-on;
-		regulator-boot-on;
-		pinctrl-names = "default";
-		pinctrl-0 = <&lcd_n_en_default>;
-	};*/
 
 	usb_id: usb-id {
 		compatible = "linux,extcon-usb-gpio";
@@ -351,6 +325,7 @@
 };
 
 &blsp_i2c5 {
+	clock-frequency = <400000>;
 	status = "okay";
 
 	touchscreen@1a {
@@ -385,10 +360,6 @@
 		pp1800-supply = <&pp1800_lcd>;
 
 		reset-gpios = <&msmgpio 25 GPIO_ACTIVE_HIGH>;
-		/*backlight-gpios = <&msmgpio 109 GPIO_ACTIVE_HIGH>;
-
-		pinctrl-names = "default";
-		pinctrl-0 = <&lcd_bl_en_default>;*/
 
 		port {
 			panel_in: endpoint {
@@ -411,11 +382,11 @@
 	status = "okay";
 };
 
-/*&pm8916_bms {
+&pm8916_bms {
 	status = "okay";
 
 	monitored-battery = <&bat>;
-};*/
+};
 
 &mdss {
 	status = "okay";
