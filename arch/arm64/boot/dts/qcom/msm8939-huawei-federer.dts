@@ -47,7 +47,7 @@
 		};
 	};
 
-	bat: battery {
+	/*bat: battery {
 		compatible = "simple-battery";
 		voltage-min-design-microvolt = <3400000>;
 		voltage-max-design-microvolt = <4350000>;
@@ -63,7 +63,7 @@
 					<3671000 11>, <3668000 10>, <3664000 9>, <3659000 8>,
 					<3649000 7>, <3627000 6>, <3588000 5>, <3535000 4>,
 					<3469000 3>, <3381000 2>, <3252000 1>, <3000000 0>;
-	};
+	};*/
 
 	gpio-keys {
 		compatible = "gpio-keys";
@@ -232,6 +232,10 @@
 	};
 };
 
+&blsp_dma {
+	status = "okay";
+};
+
 &blsp_i2c2 {
 	status = "okay";
 	
@@ -253,7 +257,7 @@
 &blsp_i2c4 {
 	status = "okay";
 
-	charger: bq24296@6b {
+	/*charger: bq24296@6b {
 		compatible = "ti,bq24296m";
 		reg = <0x6b>;
 
@@ -282,7 +286,7 @@
 				regulator-max-microvolt = <5100000>;
 			};
 		};
-	};
+	};*/
 
 	/*charger: bq24296@6B {
 		compatible = "ti,bq24296";
@@ -352,7 +356,8 @@
 	touchscreen@1a {
 		compatible = "cypress,cyttsp5";
 		reg = <0x1a>;
-
+		pinctrl-names = "default";
+		pinctrl-0 = <&ts_int_active &ts_reset_active>;
 		interrupt-parent = <&msmgpio>;
 		interrupts = <13 0x2008>;
 		reset-gpios = <&msmgpio 12 0x0>;
@@ -642,29 +647,23 @@
 		bias-disable;
 	};
 
-	/*lcd_bl_en_default: lcd-bl-en-default {
-		pins = "gpio109";
-		function = "gpio";
+	ts_pins: ts_pins {
+		ts_int_active: pmx_ts_int_active {
+			pins = "gpio13";
+			function = "gpio";
 
-		drive-strength = <2>;
-		bias-disable;
-	};*/
+			drive-strength = <16>;
+			bias-pull-up;
+		};
 
-	/*lcd_p_en_default: lcd-p-en-default {
-		pins = "gpio97";
-		function = "gpio";
+		ts_reset_active: pmx_ts_reset_active {
+			pins = "gpio12";
+			function = "gpio";
 
-		drive-strength = <2>;
-		bias-disable;
+			drive-strength = <16>;
+			bias-pull-up;
+		};
 	};
-
-	lcd_n_en_default: lcd-n-en-default {
-		pins = "gpio98";
-		function = "gpio";
-
-		drive-strength = <2>;
-		bias-disable;
-	};*/
 
 	pp1800_lcd_en: pp1800-lcd-en {
 		pins = "gpio109";
@@ -698,15 +697,15 @@
 		drive-strength = <2>;
 	};
 	
-	bq_dc_irq_default: bq-dc-irq-default {
+	/*bq_dc_irq_default: bq-dc-irq-default {
 		pins = "gpio108";
 		function = "gpio";
 
 		drive-strength = <2>;
 		bias-disable = <0>;
-	};
+	};*/
 
-	bq {
+	/*bq {
 		bq_irq_default: bq-irq-default {
 			pins = "gpio62";
 			function = "gpio";
@@ -721,7 +720,7 @@
 			drive-strength = <2>;
 			bias-pull-up;
 		};
-	};
+	};*/
 
 	usb_id_default: usb-id-default {
 		pins = "gpio117";
