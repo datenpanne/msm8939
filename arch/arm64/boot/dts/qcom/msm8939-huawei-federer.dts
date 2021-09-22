@@ -206,6 +206,10 @@
 	};
 };
 
+&apps_iommu {
+	power-domains = <&gcc MDSS_GDSC>;
+};
+
 &blsp_dma {
 	status = "okay";
 };
