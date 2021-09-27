@@ -354,7 +354,7 @@
 	
 	panel@0 {
 		status = "okay";
-		compatible = "boe,nt51021-10-1200p";
+		/*compatible = "boe,nt51021-10-1200p";
 		reg = <0>;
 
 		backlight = <&backlight>;
@@ -364,7 +364,7 @@
 		pp1800-supply = <&pp1800_lcd>;
 
 		reset-gpios = <&msmgpio 25 GPIO_ACTIVE_HIGH>;
-
+*/
 		port {
 			panel_in: endpoint {
 				remote-endpoint = <&dsi0_out>;

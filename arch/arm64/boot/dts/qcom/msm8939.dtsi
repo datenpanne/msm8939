@@ -1257,7 +1257,7 @@
 		};
 
 		camss: camss@1b00000 {
-			compatible = "qcom,msm8916-camss";
+			compatible = "qcom,msm8939-camss";
 			reg = <0x01b0ac00 0x200>,
 				<0x01b00030 0x4>,
 				<0x01b0b000 0x200>,
@@ -1540,8 +1540,8 @@
 			interrupt-names = "wdog", "fatal", "ready",
 					  "handover", "stop-ack";
 
-			power-domains = <&rpmpd MSM8916_VDDCX>,
-					<&rpmpd MSM8916_VDDMX>;
+			power-domains = <&rpmpd MSM8939_VDDMDCX_AO>,
+					<&rpmpd MSM8939_VDDMX>;
 			power-domain-names = "cx", "mx";
 			pll-supply = <&pm8916_l7>;
 
@@ -2082,8 +2082,8 @@
 					      <&wcnss_smp2p_in 3 IRQ_TYPE_EDGE_RISING>;
 			interrupt-names = "wdog", "fatal", "ready", "handover", "stop-ack";
 
-			power-domains = <&rpmpd MSM8916_VDDCX>,
-					<&rpmpd MSM8916_VDDMX_AO>;
+			power-domains = <&rpmpd MSM8939_VDDCX>,
+					<&rpmpd MSM8939_VDDMX_AO>;
 			power-domain-names = "vddcx", "vddmx";
 			vddpx-supply = <&pm8916_l7>;
 
