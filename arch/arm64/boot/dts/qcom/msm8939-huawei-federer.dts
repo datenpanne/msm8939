@@ -167,7 +167,7 @@
 		};
 	};
 	
-	/*backlight: backlight {
+	backlight: backlight {
 		compatible = "pwm-backlight";
 		pwms = <&pm8916_pwm 0 500000>;
 		enable-gpios = <&msmgpio 109 GPIO_ACTIVE_HIGH>;
@@ -176,7 +176,7 @@
 		default-brightness-level = <15>;
 		pinctrl-names = "default";
 		pinctrl-0 = <&pwm0_pin_default>;
-	};*/
+	};
 
 	/*pp1800_lcd: pp1800-lcd {
 		compatible = "regulator-fixed";
@@ -189,14 +189,14 @@
 		gpio = <&msmgpio 109 GPIO_ACTIVE_HIGH>;
 	};*/
 
-	/*reg_bl_pp5000: regulator-bl-pp5000 {
+	reg_bl_pp5000: regulator-bl-pp5000 {
 		compatible = "regulator-fixed";
 		regulator-name = "bl_pp5000";
 		regulator-min-microvolt = <5000000>;
 		regulator-max-microvolt = <5000000>;
 		regulator-always-on;
 		regulator-boot-on;
-	};*/
+	};
 
 	reg_lcd_iovcc: iovcc {
 		compatible = "regulator-fixed";
@@ -228,7 +228,7 @@
 
 	speaker_amp: audio-amplifier {
 		compatible = "simple-audio-amplifier";
-		vdd-supply = <&reg_speaker_boost>;
+		VCC-supply = <&reg_speaker_boost>;
 		enable-gpios = <&msmgpio 3 GPIO_ACTIVE_HIGH>;
 		sound-name-prefix = "Speaker Amp";
 
@@ -236,7 +236,6 @@
 		enable-active-high;
 		pinctrl-names = "default";
 		pinctrl-0 = <&speaker_amp_default>;
-
 	};
 
 	usb_id: usb-id {
@@ -453,11 +452,11 @@
 	status = "okay";
 };
 
-/*&pm8916_pwm {
+&pm8916_pwm {
 	status = "okay";
 	pinctrl-names = "default";
 	pinctrl-0 = <&pwm_out>;
-};*/
+};
 
 &pronto {
 	status = "okay";
@@ -801,7 +800,7 @@
 	};
 };
 
-/*&pm8916_mpps {
+&pm8916_mpps {
 	pwm_out: mpp4 {
 		pins = "mpp4";
 		function = "digital";
@@ -810,4 +809,4 @@
 		qcom,dtest = <1>;
 		power-source = <PM8916_MPP_VPH>;
 	};
-};*/
+};
