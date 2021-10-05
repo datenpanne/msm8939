@@ -48,7 +48,7 @@
 	};
 
 	bat: battery {
-		compatible = "simple-battery";
+		compatible = "simple-battery, "bq24296-battery";
 		voltage-min-design-microvolt = <3400000>;
 		voltage-max-design-microvolt = <4350000>;
 		energy-full-design-microwatt-hours = <24700000>;
@@ -287,33 +287,34 @@
 &blsp_i2c4 {
 	status = "okay";
 
-	/*charger: bq24296@6b {
+	charger: bq24296m@6b {
 		compatible = "ti,bq24296m";
 		reg = <0x6b>;
 
 		monitored-battery = <&bat>;
+		ti,chg_current = <1000 500 2000>;	// chg_current (max for the battery), usb_input_current, adp_input_current
 		interrupt-parent = <&msmgpio>;
 		interrupts = <62 IRQ_TYPE_EDGE_FALLING>;
 		dc-det = <108 GPIO_ACTIVE_LOW>;
 		
 		pinctrl-names = "default", "sleep";
-		pinctrl-0 = <&bq_irq_default &bq_dc_irq_default>;
+		pinctrl-0 = <&bq_irq_default &bq_dc_default>;
 		pinctrl-1 = <&bq_irq_sleep>;
 
 		regulators {
 			vsys_reg: vsys_regulator {
 				regulator-compatible = "bq2429x-vsys";
 				regulator-name = "vsys";
-				regulator-min-microvolt = <3500000>;
-				regulator-max-microvolt = <4200000>;
+//				regulator-min-microvolt = <3500000>;
+//				regulator-max-microvolt = <4200000>;
 				regulator-always-on;
 				regulator-boot-on;
 			};
 			otg_reg: otg_regulator {
 				regulator-compatible = "bq2429x-otg";
 				regulator-name = "otg";
-				regulator-min-microvolt = <4900000>;
-				regulator-max-microvolt = <5100000>;
+//				regulator-min-microvolt = <4900000>;
+//				regulator-max-microvolt = <5100000>;
 			};
 		};
 	};*/
@@ -433,11 +434,11 @@
 	status = "okay";
 };
 
-&pm8916_bms {
+/*&pm8916_bms {
 	status = "okay";
 
 	monitored-battery = <&bat>;
-};
+};*/
 
 &mdss {
 	status = "okay";
@@ -766,15 +767,15 @@
 		drive-strength = <2>;
 	};
 	
-	/*bq_dc_irq_default: bq-dc-irq-default {
+	bq_dc_default: bq-dc-default {
 		pins = "gpio108";
 		function = "gpio";
 
 		drive-strength = <2>;
 		bias-disable = <0>;
-	};*/
+	};
 
-	/*bq {
+	bq {
 		bq_irq_default: bq-irq-default {
 			pins = "gpio62";
 			function = "gpio";
@@ -789,7 +790,7 @@
 			drive-strength = <2>;
 			bias-pull-up;
 		};
-	};*/
+	};
 
 	usb_id_default: usb-id-default {
 		pins = "gpio117";
@@ -807,6 +808,28 @@
 
 		output-low;
 		qcom,dtest = <1>;
-		power-source = <PM8916_MPP_VPH>;
+		power-source = <PM8916_MPP_L5>;
+	};
+};
+
+#define POWER_SUPPLY_TECHNOLOGY_NiMH 1
+#define POWER_SUPPLY_TECHNOLOGY_LION 2
+#define POWER_SUPPLY_TECHNOLOGY_LIPO 3
+#define POWER_SUPPLY_TECHNOLOGY_LiFe 4
+#define POWER_SUPPLY_TECHNOLOGY_NiCd 5
+#define POWER_SUPPLY_TECHNOLOGY_LiMn 6
+
+/ {
+	battery: battery-monitor {
+		compatible = "linux,generic-adc-battery";
+		io-channels = <&gpadc 6>, <&gpadc 11>, <&gpadc 1>;
+		io-channel-names = "voltage", "current", "temperature";
+		monitored-battery = <&bat>;
+		technology = <POWER_SUPPLY_TECHNOLOGY_LION>;
+		battery-name = "bq24296-battery";
+		charge_full_design = <6500000>;
+		charge_empty_design = <00>;
+		voltage_min_design = <3400000>;
+		voltage_max_design = <4350000>;
 	};
 };

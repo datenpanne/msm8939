@@ -50,8 +50,8 @@
 #define CHRG_CHRGE_DONE		3
 
 /* REG0a vendor status register value */
-#define CHIP_BQ24296		0x20
-#define CHIP_BQ24296M		0x28
+#define CHIP_BQ24296		0x28
+#define CHIP_BQ24296M		0x20
 #define CHIP_BQ24297		0x60
 #define CHIP_MP2624		0x04
 
