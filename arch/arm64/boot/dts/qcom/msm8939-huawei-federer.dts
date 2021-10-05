@@ -405,7 +405,7 @@
 		compatible = "boe,nt51021-10-1200p";
 		reg = <0>;
 
-		//backlight = <&backlight>;
+		backlight = <&backlight>;
 
 		vsn-supply = <&reg_lcd_vci>;
 		vsp-supply = <&reg_lcd_iovcc>;
@@ -694,13 +694,13 @@
 		};
 	};
 
-	/*pp1800_lcd_en: pp1800-lcd-en {
+	pwm0_pin_default: pwm0-pin-default {
 		pins = "gpio109";
 		function = "gpio";
 
 		drive-strength = <2>;
 		bias-disable;
-	};*/
+	};
 
 	lcd_iovcc_default: lcd-iovcc-default {
 		pins = "gpio97";
