@@ -167,16 +167,16 @@
 		};
 	};
 	
-	backlight: backlight {
+	/*backlight: backlight {
 		compatible = "pwm-backlight";
 		pwms = <&pm8916_pwm 0 500000>;
-		//enable-gpios = <&msmgpio 109 GPIO_ACTIVE_HIGH>;
+		enable-gpios = <&msmgpio 109 GPIO_ACTIVE_HIGH>;
 		power-supply = <&reg_bl_pp5000>;
 		brightness-levels = <0 16 18 20 22 24 26 29 32 35 38 42 46 51 56 62 68 75 83 91 100>;
 		default-brightness-level = <15>;
-		//pinctrl-names = "default";
-		//pinctrl-0 = <&pwm0_pin_default>;
-	};
+		pinctrl-names = "default";
+		pinctrl-0 = <&pwm0_pin_default>;
+	};*/
 
 	pp1800_lcd: pp1800-lcd {
 		compatible = "regulator-fixed";
@@ -189,13 +189,41 @@
 		gpio = <&msmgpio 109 GPIO_ACTIVE_HIGH>;
 	};
 
-	reg_bl_pp5000: regulator-bl-pp5000 {
+	/*reg_bl_pp5000: regulator-bl-pp5000 {
 		compatible = "regulator-fixed";
 		regulator-name = "bl_pp5000";
 		regulator-min-microvolt = <5000000>;
 		regulator-max-microvolt = <5000000>;
 		regulator-always-on;
 		regulator-boot-on;
+	};*/
+
+	reg_lcd_pos: regulator-lcd-pos {
+		compatible = "regulator-fixed";
+		regulator-name = "lcd-pos";
+		regulator-min-microvolt = <5400000>;
+		regulator-max-microvolt = <5400000>;
+		vin-supply = <&pm8916_l6>;	
+		gpio = <&msmgpio 97 GPIO_ACTIVE_HIGH>;
+		enable-active-high;
+		regulator-always-on;
+		regulator-boot-on;
+		pinctrl-names = "default";
+		pinctrl-0 = <&lcd_p_en_default>;
+	};
+
+	reg_lcd_neg: regulator-lcd-neg {
+		compatible = "regulator-fixed";
+		regulator-name = "lcd-neg";
+		regulator-min-microvolt = <5400000>;
+		regulator-max-microvolt = <5400000>;
+		vin-supply = <&pm8916_l6>;		
+		gpio = <&msmgpio 32 GPIO_ACTIVE_HIGH>;
+		enable-active-high;
+		regulator-always-on;
+		regulator-boot-on;
+		pinctrl-names = "default";
+		pinctrl-0 = <&lcd_n_en_default>;
 	};
 
 	usb_id: usb-id {
@@ -354,17 +382,17 @@
 	
 	panel@0 {
 		status = "okay";
-		/*compatible = "boe,nt51021-10-1200p";
+		compatible = "boe,nt51021-10-1200p";
 		reg = <0>;
 
 		backlight = <&backlight>;
 
-		vci-supply = <&pm8916_l17>;
-		iovcc-supply = <&pm8916_l6>;
+		vci-supply = <&reg_lcd_neg>;
+		iovcc-supply = <&reg_lcd_pos>;
 		pp1800-supply = <&pp1800_lcd>;
 
 		reset-gpios = <&msmgpio 25 GPIO_ACTIVE_HIGH>;
-*/
+
 		port {
 			panel_in: endpoint {
 				remote-endpoint = <&dsi0_out>;
@@ -405,11 +433,11 @@
 	status = "okay";
 };
 
-&pm8916_pwm {
+/*&pm8916_pwm {
 	status = "okay";
 	pinctrl-names = "default";
 	pinctrl-0 = <&pwm_out>;
-};
+};*/
 
 &pronto {
 	status = "okay";
@@ -648,6 +676,22 @@
 		bias-disable;
 	};
 
+	lcd_p_en_default: lcd-p-en-default {
+		pins = "gpio97";
+		function = "gpio";
+
+		drive-strength = <2>;
+		bias-disable;
+	};
+
+	lcd_n_en_default: lcd-n-en-default {
+		pins = "gpio32";
+		function = "gpio";
+
+		drive-strength = <2>;
+		bias-disable;
+	};
+
 	mdss {
 		mdss_default: mdss-default {
 			pins = "gpio25";
@@ -706,7 +750,7 @@
 	};
 };
 
-&pm8916_mpps {
+/*&pm8916_mpps {
 	pwm_out: mpp4 {
 		pins = "mpp4";
 		function = "digital";
@@ -715,4 +759,4 @@
 		qcom,dtest = <1>;
 		power-source = <PM8916_MPP_VPH>;
 	};
-};
+};*/
