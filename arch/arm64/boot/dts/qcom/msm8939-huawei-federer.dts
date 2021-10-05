@@ -317,7 +317,7 @@
 //				regulator-max-microvolt = <5100000>;
 			};
 		};
-	};*/
+	};
 
 	/*charger: bq24296@6B {
 		compatible = "ti,bq24296";
