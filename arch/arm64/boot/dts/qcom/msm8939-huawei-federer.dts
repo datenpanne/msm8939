@@ -385,7 +385,7 @@
 		compatible = "boe,nt51021-10-1200p";
 		reg = <0>;
 
-		backlight = <&backlight>;
+		//backlight = <&backlight>;
 
 		vci-supply = <&reg_lcd_neg>;
 		iovcc-supply = <&reg_lcd_pos>;
