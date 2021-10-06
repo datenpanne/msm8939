@@ -269,7 +269,7 @@ static int boe_nt51021_10_1200p_probe(struct mipi_dsi_device *dsi)
 
 	ctx->supplies[0].supply = "vsp";
 	ctx->supplies[1].supply = "vsn";
-	ctx->supplies[1].supply = "pp1800";
+	ctx->supplies[2].supply = "pp1800";
 	ret = devm_regulator_bulk_get(dev, ARRAY_SIZE(ctx->supplies),
 				      ctx->supplies);
 	if (ret < 0)
