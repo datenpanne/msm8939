@@ -19,7 +19,7 @@
 struct boe_nt51021_10_1200p {
 	struct drm_panel panel;
 	struct mipi_dsi_device *dsi;
-	struct regulator_bulk_data supplies[2];
+	struct regulator_bulk_data supplies[3];
 	struct gpio_desc *reset_gpio;
 	bool prepared;
 };
@@ -269,6 +269,7 @@ static int boe_nt51021_10_1200p_probe(struct mipi_dsi_device *dsi)
 
 	ctx->supplies[0].supply = "vsp";
 	ctx->supplies[1].supply = "vsn";
+	ctx->supplies[1].supply = "pp1800";
 	ret = devm_regulator_bulk_get(dev, ARRAY_SIZE(ctx->supplies),
 				      ctx->supplies);
 	if (ret < 0)

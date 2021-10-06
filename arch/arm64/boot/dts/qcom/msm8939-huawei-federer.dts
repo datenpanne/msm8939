@@ -166,19 +166,8 @@
 			reg = <0 0xffc00000 0 0x400000>;
 		};
 	};
-	
-	backlight: backlight {
-		compatible = "pwm-backlight";
-		pwms = <&pm8916_pwm 0 500000>;
-		enable-gpios = <&msmgpio 109 GPIO_ACTIVE_HIGH>;
-		power-supply = <&reg_bl_pp5000>;
-		brightness-levels = <0 16 18 20 22 24 26 29 32 35 38 42 46 51 56 62 68 75 83 91 100>;
-		default-brightness-level = <15>;
-		pinctrl-names = "default";
-		pinctrl-0 = <&pwm0_pin_default>;
-	};
 
-	/*pp1800_lcd: pp1800-lcd {
+	pp1800_lcd: pp1800-lcd {
 		compatible = "regulator-fixed";
 		regulator-name = "pp1800_lcd";
 		pinctrl-names = "default";
@@ -187,15 +176,6 @@
 		enable-active-high;
 
 		gpio = <&msmgpio 109 GPIO_ACTIVE_HIGH>;
-	};*/
-
-	reg_bl_pp5000: regulator-bl-pp5000 {
-		compatible = "regulator-fixed";
-		regulator-name = "bl_pp5000";
-		regulator-min-microvolt = <5000000>;
-		regulator-max-microvolt = <5000000>;
-		regulator-always-on;
-		regulator-boot-on;
 	};
 
 	reg_lcd_iovcc: iovcc {
@@ -212,9 +192,9 @@
 		pinctrl-0 = <&lcd_iovcc_default>;
 	};
 
-	reg_lcd_vci: vci {
+	reg_lcd_vcc: vcc {
 		compatible = "regulator-fixed";
-		regulator-name = "vci";
+		regulator-name = "vcc";
 		regulator-min-microvolt = <5400000>;
 		regulator-max-microvolt = <5400000>;
 		//vin-supply = <&pm8916_l6>;		
@@ -223,7 +203,7 @@
 		regulator-always-on;
 		regulator-boot-on;
 		pinctrl-names = "default";
-		pinctrl-0 = <&lcd_vci_default>;
+		pinctrl-0 = <&lcd_vcc_default>;
 	};
 
 	speaker_amp: audio-amplifier {
@@ -406,11 +386,9 @@
 		compatible = "boe,nt51021-10-1200p";
 		reg = <0>;
 
-		backlight = <&backlight>;
-
-		vsn-supply = <&reg_lcd_vci>;
+		vsn-supply = <&reg_lcd_vcc>;
 		vsp-supply = <&reg_lcd_iovcc>;
-
+		pp1800-supply = <&pp1800_lcd>;
 		reset-gpios = <&msmgpio 25 GPIO_ACTIVE_HIGH>;
 
 		port {
@@ -453,12 +431,6 @@
 	status = "okay";
 };
 
-&pm8916_pwm {
-	status = "okay";
-	pinctrl-names = "default";
-	pinctrl-0 = <&pwm_out>;
-};
-
 &pm8916_vadc {
 	status = "okay";
 
@@ -474,7 +446,7 @@
 	status = "okay";
 
 	iris {
-		compatible = "qcom,wcn3660b";
+		compatible = "qcom,wcn3680";
 	};
 };
 
@@ -706,7 +678,7 @@
 		};
 	};
 
-	pwm0_pin_default: pwm0-pin-default {
+	pp1800_lcd_en: pp1800-lcd-en {
 		pins = "gpio109";
 		function = "gpio";
 
@@ -722,7 +694,7 @@
 		bias-disable;
 	};
 
-	lcd_vci_default: lcd-vci-default {
+	lcd_vcc_default: lcd-vcc-default {
 		pins = "gpio32";
 		function = "gpio";
 
@@ -809,16 +781,5 @@
 
 		drive-strength = <8>;
 		bias-pull-up;
-	};
-};
-
-&pm8916_mpps {
-	pwm_out: mpp4 {
-		pins = "mpp4";
-		function = "digital";
-
-		output-low;
-		qcom,dtest = <1>;
-		power-source = <PM8916_MPP_L5>;
 	};
 };
