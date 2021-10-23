@@ -181,9 +181,7 @@
 	reg_lcd_iovcc: iovcc {
 		compatible = "regulator-fixed";
 		regulator-name = "iovcc";
-		regulator-min-microvolt = <5400000>;
-		regulator-max-microvolt = <5400000>;
-		//vin-supply = <&pm8916_l6>;	
+		vin-supply = <&reg_lcd_pos>;	
 		gpio = <&msmgpio 97 GPIO_ACTIVE_HIGH>;
 		enable-active-high;
 		regulator-always-on;
@@ -195,15 +193,27 @@
 	reg_lcd_vcc: vcc {
 		compatible = "regulator-fixed";
 		regulator-name = "vcc";
-		regulator-min-microvolt = <5400000>;
-		regulator-max-microvolt = <5400000>;
-		//vin-supply = <&pm8916_l6>;		
+		vin-supply = <&reg_lcd_neg>;		
 		gpio = <&msmgpio 32 GPIO_ACTIVE_HIGH>;
 		enable-active-high;
 		regulator-always-on;
 		regulator-boot-on;
 		pinctrl-names = "default";
 		pinctrl-0 = <&lcd_vcc_default>;
+	};
+
+	reg_lcd_pos: regulator-lcd-pos {
+		compatible = "regulator-fixed";
+		regulator-name = "lcd_pos";
+		regulator-min-microvolt = <5400000>;
+		regulator-max-microvolt = <5400000>;
+	};
+
+	reg_lcd_neg: regulator-lcd-neg {
+		compatible = "regulator-fixed";
+		regulator-name = "lcd_neg";
+		regulator-min-microvolt = <5400000>;
+		regulator-max-microvolt = <5400000>;
 	};
 
 	speaker_amp: audio-amplifier {
@@ -568,7 +578,6 @@
 	l6 {
 		regulator-min-microvolt = <1800000>;
 		regulator-max-microvolt = <1800000>;
-		regulator-boot-on;
 		regulator-always-on;
 	};
 
@@ -627,8 +636,6 @@
 	l17 {
 		regulator-min-microvolt = <2850000>;
 		regulator-max-microvolt = <2850000>;
-		regulator-boot-on;
-		regulator-always-on;
 	};
 
 	l18 {
