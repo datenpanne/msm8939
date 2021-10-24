@@ -234,7 +234,7 @@
 		pinctrl-0 = <&speaker_switch_vdd_default>;
 	};
 
-	reg_speaker_amp: audio-amplifier {
+	speaker_amp: audio-amplifier {
 		compatible = "simple-audio-amplifier";
 		VCC-supply = <&reg_speaker_boost>;
 		enable-gpios = <&msmgpio 3 GPIO_ACTIVE_HIGH>;
