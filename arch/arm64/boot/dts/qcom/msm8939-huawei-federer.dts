@@ -242,8 +242,8 @@
 
 		gpios = <&msmgpio 3 GPIO_ACTIVE_HIGH>;
 		enable-active-high;
-		pinctrl-names = "default";
-		pinctrl-0 = <&speaker_amp_default>;
+		//pinctrl-names = "default";
+		//pinctrl-0 = <&speaker_amp_default>;
 	};
 
 	reg_speaker_boost: speaker-boost {
@@ -512,12 +512,12 @@
 
 	model = "msm8916";
 	audio-routing =
-		"Speaker Amp IN", "HPH_L_EXT",
+		//"Speaker Amp IN", "HPH_L_EXT",
 		//"Speaker Amp INR", "HPH_R_EXT",
 		"AMIC1", "MIC BIAS External1",
 		"AMIC2", "MIC BIAS External2",
 		"AMIC3", "MIC BIAS External1";
-	aux-devs = <&speaker_amp>;
+	aux-devs = <&amp>;
 	
 	dai-link-primary {
 		link-name = "Primary MI2S";
@@ -748,15 +748,15 @@
 
 		drive-strength = <2>;
 		bias-disable;
-	};*/
+	};
 
-	speaker_amp_default: speaker-amp-default {
+	amp_default: speaker-amp-default {
 		pins = "gpio3";
 		function = "gpio";
 
 		drive-strength = <2>;
 		bias-disable;
-	};
+	};*/
 	
 	speaker_boost_default: speaker-boost-default {
 		pins = "gpio2";
