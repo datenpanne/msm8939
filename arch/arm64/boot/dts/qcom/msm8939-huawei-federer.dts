@@ -221,8 +221,8 @@
 		regulator-name = "speaker-switch-in";
 		id-gpio = <&msmgpio 1 GPIO_ACTIVE_HIGH>;
 		enable-active-high;
-		pinctrl-names = "default";
-		pinctrl-0 = <&speaker_switch_in_default>;
+		//pinctrl-names = "default";
+		//pinctrl-0 = <&speaker_switch_in_default>;
 	};
 
 	reg_speaker_switch_vdd: speaker-switch-vdd {
@@ -230,15 +230,15 @@
 		regulator-name = "speaker-vdd";
 		id-gpio = <&msmgpio 0 GPIO_ACTIVE_HIGH>;
 		enable-active-high;
-		pinctrl-names = "default";
-		pinctrl-0 = <&speaker_switch_vdd_default>;
+		//pinctrl-names = "default";
+		//pinctrl-0 = <&speaker_switch_vdd_default>;
 	};
 
-	speaker_amp: audio-amplifier {
+	amp: analog-amplifier {
 		compatible = "simple-audio-amplifier";
 		VCC-supply = <&reg_speaker_boost>;
 		enable-gpios = <&msmgpio 3 GPIO_ACTIVE_HIGH>;
-		sound-name-prefix = "Speaker Amp";
+		//sound-name-prefix = "Speaker Amp";
 
 		gpios = <&msmgpio 3 GPIO_ACTIVE_HIGH>;
 		enable-active-high;
@@ -291,9 +291,9 @@
 		pinctrl-names = "default";
 		pinctrl-0 = <&accel_irq_default>;
 		
-		mount-matrix = "-1", "0", "0",
-				"0", "1", "0",
-				"0", "0", "1";
+		mount-matrix = "0", "1", "0",
+			       "1", "0", "0",
+                               "0", "0", "1";
 	};
 };
 
@@ -734,7 +734,7 @@
 		bias-disable;
 	};
 
-	speaker_switch_in_default: speaker-switch-in-default {
+	/*speaker_switch_in_default: speaker-switch-in-default {
 		pins = "gpio1";
 		function = "gpio";
 
@@ -748,7 +748,7 @@
 
 		drive-strength = <2>;
 		bias-disable;
-	};
+	};*/
 
 	speaker_amp_default: speaker-amp-default {
 		pins = "gpio3";
