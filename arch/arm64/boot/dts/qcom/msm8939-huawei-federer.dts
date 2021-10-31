@@ -208,6 +208,7 @@
 		regulator-min-microvolt = <5400000>;
 		regulator-max-microvolt = <5400000>;
 		regulator-always-on;
+		regulator-boot-on;
 	};
 
 	reg_lcd_neg: regulator-lcd-neg {
@@ -216,6 +217,7 @@
 		regulator-min-microvolt = <5400000>;
 		regulator-max-microvolt = <5400000>;
 		regulator-always-on;
+		regulator-boot-on;
 	};
 
 	reg_speaker_switch_in: speaker-switch-in {
@@ -294,7 +296,7 @@
 		pinctrl-0 = <&accel_irq_default>;
 		
 		mount-matrix = "1", "0", "0",
-			       "0", "-1", "0",
+			       "0", "1", "0",
 			       "0", "0", "1";
 	};
 };
@@ -421,8 +423,8 @@
 		compatible = "boe,nt51021-10-1200p";
 		reg = <0>;
 
-		vsn-supply = <&reg_lcd_vcc>;
-		vsp-supply = <&reg_lcd_iovcc>;
+		vcc-supply = <&reg_lcd_vcc>;
+		iovcc-supply = <&reg_lcd_iovcc>;
 		pp1800-supply = <&pp1800_lcd>;
 
 		reset-gpios = <&msmgpio 25 GPIO_ACTIVE_LOW>;
@@ -449,11 +451,17 @@
 	status = "okay";
 };
 
-&pm8916_bms {
+&bq24296m {
 	status = "okay";
 	power-supplies = <&charger>;
 	monitored-battery = <&bat>;
 };
+
+/*&pm8916_bms {
+	status = "okay";
+	power-supplies = <&charger>;
+	monitored-battery = <&bat>;
+};*/
 
 &mdss {
 	status = "okay";
@@ -694,7 +702,7 @@
 		bias-disable;
 	};
 
-	ts_pins: ts_pins {
+/*	ts_pins: ts_pins {
 		ts_int_active: pmx_ts_int_active {
 			pins = "gpio13";
 			function = "gpio";
@@ -711,7 +719,7 @@
 			bias-pull-up;
 		};
 	};
-
+*/
 	pp1800_lcd_en: pp1800-lcd-en {
 		pins = "gpio109";
 		function = "gpio";
