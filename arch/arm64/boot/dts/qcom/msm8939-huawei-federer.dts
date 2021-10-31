@@ -304,7 +304,7 @@
 &blsp_i2c4 {
 	status = "okay";
 
-	charger: bq24296m@6b {
+	charger: bq24296@6b {
 		compatible = "ti,bq24296m";
 		reg = <0x6b>;
 
@@ -451,7 +451,7 @@
 	status = "okay";
 };
 
-&bq24296m {
+&bq24296 {
 	status = "okay";
 	power-supplies = <&charger>;
 	monitored-battery = <&bat>;
