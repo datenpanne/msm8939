@@ -405,8 +405,7 @@
 	touchscreen@1a {
 		compatible = "cypress,cyttsp5";
 		reg = <0x1a>;
-		//pinctrl-names = "default";
-		//pinctrl-0 = <&ts_int_active &ts_reset_active>;
+
 		interrupt-parent = <&msmgpio>;
 		interrupts = <13 0x2008>;
 		reset-gpios = <&msmgpio 12 0x0>;
