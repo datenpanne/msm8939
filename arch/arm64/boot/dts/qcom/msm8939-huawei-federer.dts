@@ -142,13 +142,15 @@
 			no-map;
 		};
 
-		ramoops: ramoops_mem_region@8cb00000 {
+		ramoops@a0000000 {
 			compatible = "ramoops";
-			reg = <0x0 0x8cb00000 0x0 0x200000>;
+			reg = <0x0 0xa0000000 0x0 0x100000>;
 
-			record-size = <65536>;
-			console-size = <1048576>;
-			ftrace-size = <0>;
+			record-size = <0x20000>;
+			console-size = <0x40000>;
+			ftrace-size = <0x20000>;
+			pmsg-size = <0x20000>;
+			ecc-size = <16>;
 		};
 
 		venus_mem: venus@8f800000 {
@@ -295,9 +297,9 @@
 		pinctrl-names = "default";
 		pinctrl-0 = <&accel_irq_default>;
 		
-		mount-matrix = "1", "0", "0",
-			       "0", "1", "0",
-			       "0", "0", "1";
+		mount-matrix = "0", "0", "0",
+			       "0", "0", "-1"
+			       "0", "-1", "0";
 	};
 };
 
