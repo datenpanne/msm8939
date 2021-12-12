@@ -108,10 +108,10 @@
 	};
 
 	reserved-memory {
-		/delete-node/ venus@90000000;
+		*//delete-node/ venus@90000000;
 		/delete-node/ rmtfs@86681000;
 		/delete-node/ rfsa@867e0000;
-		/delete-node/ mba@8ea00000;
+		/delete-node/ mba@8ea00000;*/
 
 		cont_splash_mem: framebuffer@83000000 {
 			compatible = "removed-dma-pool";
@@ -124,12 +124,12 @@
 			no-map;
 		};
 
-		rmtfs@86700000 {
+		/*rmtfs@86700000 {
 			compatible = "qcom,rmtfs-mem";
 			reg = <0x0 0x86700000 0x0 0x100000>;
 			no-map;
 			qcom,client-id = <1>;
-		};
+		};*/
 
 		gps_mem: gps@8b800000 {
 			status = "disabled";
@@ -151,7 +151,7 @@
 			ftrace-size = <0>;
 		};
 
-		venus_mem: venus@8f800000 {
+		/*venus_mem: venus@8f800000 {
 			reg = <0x0 0x8f800000 0x0 0x800000>;
 			no-map;
 		};
@@ -164,7 +164,7 @@
 		mba_mem: mba@ffc00000 {
 			no-map;
 			reg = <0 0xffc00000 0 0x400000>;
-		};
+		};*/
 	};
 
 	pp1800_lcd: pp1800-lcd {
