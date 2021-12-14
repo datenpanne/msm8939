@@ -295,7 +295,7 @@
 		pinctrl-names = "default";
 		pinctrl-0 = <&accel_irq_default>;
 		
-		mount-matrix =  "1", "0", "0",
+		mount-matrix =  "0", "0", "0",
                         "0", "-1", "0",
                         "0", "0", "1";
 	};
