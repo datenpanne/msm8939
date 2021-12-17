@@ -50,13 +50,13 @@
 #define CHRG_CHRGE_DONE		3
 
 /* REG0a vendor status register value */
-#define CHIP_BQ24296		0x28
 #define CHIP_BQ24296M		0x20
+#define CHIP_BQ24296		0x28
 #define CHIP_BQ24297		0x60
 #define CHIP_MP2624		0x04
 
-#define ID_BQ24296		0
-#define ID_BQ24296M		1
+#define ID_BQ24296M		0
+#define ID_BQ24296		1
 #define ID_BQ24297		2
 #define ID_MP2624		3
 
@@ -218,7 +218,6 @@ struct bq2429x_device_info {
 	unsigned int usb_input_current_uA;
 	/* alternate power source (not USB) */
 	unsigned int adp_input_current_uA;
-	unsigned int battery_voltage_max_design_uV;
 	unsigned int max_VSYS_uV;
 
 	u32 wdt_timeout;
@@ -240,7 +239,7 @@ enum bq2429x_table_ids {
 	TBL_SYS_MIN,
 };
 
-static const unsigned int bq2429x_iinlim_tbl[] = {
+static const int bq2429x_iinlim_tbl[] = {
 	100000,
 	150000,
 	500000,
@@ -251,7 +250,7 @@ static const unsigned int bq2429x_iinlim_tbl[] = {
 	3000000
 };
 
-static const unsigned int bq2429x_sys_min_tbl[] = {
+static const int bq2429x_sys_min_tbl[] = {
 	3000000,
 	3100000,
 	3200000,
@@ -262,7 +261,7 @@ static const unsigned int bq2429x_sys_min_tbl[] = {
 	3700000,
 };
 
-static const unsigned int bq2429x_boostv_tbl[] = {
+static const int bq2429x_boostv_tbl[] = {
 	4550000,
 	4614000,
 	4678000,
@@ -282,9 +281,9 @@ static const unsigned int bq2429x_boostv_tbl[] = {
 };
 
 struct bq2429x_range {
-	unsigned int min;
-	unsigned int max;
-	unsigned int step;
+	int min;
+	int max;
+	int step;
 };
 
 struct bq2429x_lookup {
@@ -307,7 +306,9 @@ static const union {
 	[TBL_SYS_MIN]	= { .lt = {bq2429x_sys_min_tbl, ARRAY_SIZE(bq2429x_sys_min_tbl)} },
 };
 
-static int bq2429x_find_idx(u32 value, enum bq2429x_table_ids id)
+// CHECKME: this may silently convert negative values to big values!!!
+
+static int bq2429x_find_idx(int value, enum bq2429x_table_ids id)
 {
 	int idx;
 
@@ -323,9 +324,13 @@ static int bq2429x_find_idx(u32 value, enum bq2429x_table_ids id)
 
 		for (idx = 1; idx < tbl_size && tbl[idx] <= value; idx++);
 		idx -= 1;
-
 	} else {
 		const struct bq2429x_range *tbl = &bq2429x_tables[id].rt;
+
+		if (value < tbl->min)
+			return 0;
+		if (value > tbl->max)
+			return (tbl->max - tbl->min) / tbl->step;
 
 		idx = (value - tbl->min) / tbl->step;
 	}
@@ -606,6 +611,45 @@ static int bq2429x_set_charge_term_current_uA(struct bq2429x_device_info *di, in
 		dev_err(&di->client->dev, "%s(): Failed to set charge current limit (%d)\n",
 			__func__, uA);
 	}
+	return ret;
+}
+
+static int bq2429x_get_charge_term_voltage_uV(struct bq2429x_device_info *di)
+{
+	int ret;
+
+	ret = bq2429x_field_read(di, F_VREG);
+	dev_dbg(di->dev, "bq2429x: F_VREG %02x\n", ret);
+
+	if (ret < 0) {
+		dev_err(&di->client->dev, "%s: err %d\n", __func__, ret);
+		return ret;
+	}
+
+	return bq2429x_find_val(ret, TBL_VREG);
+}
+
+static int bq2429x_set_charge_term_voltage_uV(struct bq2429x_device_info *di, int max_uV)
+{
+	int bits;
+	int ret;
+
+	/* limit to battery design by device tree */
+	max_uV = min_t(int, max_uV, di->bat_info.voltage_max_design_uv);
+
+	bits = bq2429x_find_idx(max_uV, TBL_VREG);
+	if (bits < 0)
+		return bits;
+
+	dev_dbg(di->dev, "%s(): translated vbatt_max=%u and VREG=%u (%02x)\n",
+		__func__,
+		di->bat_info.voltage_max_design_uv, max_uV,
+		bits);
+
+	ret = bq2429x_field_write(di, F_VREG, bits);
+	if (ret < 0)
+		dev_err(di->dev, "%s(): Failed to set max. battery voltage\n",
+				__func__);
 	return ret;
 }
 
@@ -1243,7 +1287,6 @@ static DEVICE_ATTR(otg, 0644, bq2429x_otg_show, bq2429x_otg_store);
 static int bq2429x_init_registers(struct bq2429x_device_info *di)
 {
 	int max_uV;
-	int bits;
 	int ret;
 
 	ret = power_supply_get_battery_info(di->usb, &di->bat_info);
@@ -1292,26 +1335,15 @@ static int bq2429x_init_registers(struct bq2429x_device_info *di)
 	else
 		max_uV = di->max_VSYS_uV - 150000;
 
-	max_uV = min_t(int, max_uV, di->bat_info.voltage_max_design_uv);
-
-// REVISIT: MP2624 has slightly different scale and offset
-	bits = bq2429x_find_idx(max_uV, TBL_VREG);
-	if (bits < 0)
-		return bits;
-
-	dev_dbg(di->dev, "%s(): translated vbatt_max=%u and VSYS_max=%u to VREG=%u (%02x)\n",
+	dev_dbg(di->dev, "%s(): translated VSYS_max=%u to VBATT_MAX=%u\n",
 		__func__,
-		di->bat_info.voltage_max_design_uv, di->max_VSYS_uV, max_uV,
-		bits);
+		di->max_VSYS_uV, max_uV);
+
+	ret = bq2429x_set_charge_term_voltage_uV(di, max_uV);
+	if (ret < 0)
+		return ret;
 
 	/* revisit: bq2429x_set_charge_current_uA(di, ?); */
-
-	ret = bq2429x_field_write(di, F_VREG, bits);
-	if (ret < 0) {
-		dev_err(di->dev, "%s(): Failed to set max. battery voltage\n",
-				__func__);
-		return ret;
-	}
 
 	ret = bq2429x_get_chip_state(di, &di->state);
 	if (ret < 0) {
@@ -1428,7 +1460,12 @@ static int bq2429x_get_property(struct power_supply *psy,
 	case POWER_SUPPLY_PROP_INPUT_CURRENT_LIMIT:
 	case POWER_SUPPLY_PROP_CURRENT_MAX:
 		val->intval = bq2429x_input_current_limit_uA(di);
-		dev_dbg(di->dev, "bq2429x CURRENT_MAX: %u mA\n", val->intval);
+		dev_dbg(di->dev, "bq2429x CURRENT_MAX: %u uA\n", val->intval);
+		break;
+
+	case POWER_SUPPLY_PROP_CONSTANT_CHARGE_VOLTAGE_MAX:
+		val->intval = bq2429x_get_charge_term_voltage_uV(di);
+		dev_dbg(di->dev, "bq2429x VOLTAGE: %u uV\n", val->intval);
 		break;
 
 	case POWER_SUPPLY_PROP_CURRENT_NOW:
@@ -1496,6 +1533,8 @@ static int bq2429x_set_property(struct power_supply *psy,
 		if (ret >= 0)
 			di->usb_input_current_uA = val->intval;	/* restore after unplug/replug */
 		return ret;
+	case POWER_SUPPLY_PROP_CONSTANT_CHARGE_VOLTAGE_MAX:
+		return bq2429x_set_charge_term_voltage_uV(di, val->intval);
 	default:
 		return -EPERM;
 	}
@@ -1508,6 +1547,7 @@ static int bq2429x_writeable_property(struct power_supply *psy,
 {
 	switch (psp) {
 	case POWER_SUPPLY_PROP_INPUT_CURRENT_LIMIT:
+	case POWER_SUPPLY_PROP_CONSTANT_CHARGE_VOLTAGE_MAX:
 		return 1;
 	default:
 		break;
@@ -1523,6 +1563,7 @@ static enum power_supply_property bq2429x_charger_props[] = {
 	POWER_SUPPLY_PROP_VOLTAGE_NOW,
 	POWER_SUPPLY_PROP_INPUT_CURRENT_LIMIT,
 	POWER_SUPPLY_PROP_CURRENT_MAX,
+	POWER_SUPPLY_PROP_CONSTANT_CHARGE_VOLTAGE_MAX,
 	POWER_SUPPLY_PROP_CURRENT_NOW,
 	POWER_SUPPLY_PROP_TEMP,
 	POWER_SUPPLY_PROP_PRESENT,
@@ -1530,8 +1571,8 @@ static enum power_supply_property bq2429x_charger_props[] = {
 };
 
 static const struct power_supply_desc bq2429x_power_supply_desc[] = {
-	[ID_BQ24296] = {
-	.name			= "bq24296",
+	[ID_BQ24296M] = {
+	.name			= "bq24296m",
 	.type			= POWER_SUPPLY_TYPE_USB,
 	.properties		= bq2429x_charger_props,
 	.num_properties		= ARRAY_SIZE(bq2429x_charger_props),
@@ -1539,8 +1580,8 @@ static const struct power_supply_desc bq2429x_power_supply_desc[] = {
 	.set_property		= bq2429x_set_property,
 	.property_is_writeable	= bq2429x_writeable_property,
 	},
-	[ID_BQ24296M] = {
-	.name			= "bq24296m",
+	[ID_BQ24296] = {
+	.name			= "bq24296",
 	.type			= POWER_SUPPLY_TYPE_USB,
 	.properties		= bq2429x_charger_props,
 	.num_properties		= ARRAY_SIZE(bq2429x_charger_props),
@@ -1623,7 +1664,7 @@ static int bq2429x_parse_dt(struct bq2429x_device_info *di)
 	}
 
 	if (ret != ARRAY_SIZE(bq2429x_regulator_matches)) {
-		dev_err(di->dev, "Found %d but expected %ld regulators\n",
+		dev_err(di->dev, "Found %d but expected %d regulators\n",
 			ret, ARRAY_SIZE(bq2429x_regulator_matches));
 		return -EINVAL;
 	}
@@ -1716,8 +1757,8 @@ static int bq2429x_power_supply_init(struct bq2429x_device_info *di)
 }
 
 static const struct of_device_id bq2429x_charger_of_match[] = {
-	{ .compatible = "ti,bq24296", .data = (void *) 0 },
-	{ .compatible = "ti,bq24296m", .data = (void *) 1 },
+	{ .compatible = "ti,bq24296m", .data = (void *) 0 },
+	{ .compatible = "ti,bq24296", .data = (void *) 1 },
 	{ .compatible = "ti,bq24297", .data = (void *) 2 },
 	/* almost the same
 	 * can control VSYS-VBATT level but not OTG max power
@@ -1770,8 +1811,8 @@ static int bq2429x_charger_probe(struct i2c_client *client,
 	}
 
 	switch (ret) {
-	case CHIP_BQ24296:
 	case CHIP_BQ24296M:
+	case CHIP_BQ24296:
 	case CHIP_BQ24297:
 	case CHIP_MP2624:
 		break;
@@ -1851,8 +1892,8 @@ static int bq2429x_charger_remove(struct i2c_client *client)
 }
 
 static const struct i2c_device_id bq2429x_charger_id[] = {
-	{ "bq24296", ID_BQ24296 },
 	{ "bq24296m", ID_BQ24296M },
+	{ "bq24296", ID_BQ24296 },
 	{ "bq24297", ID_BQ24297 },
 	{ "mp2624", ID_MP2624 },
 	{ },
