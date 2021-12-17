@@ -449,7 +449,7 @@
 	status = "okay";
 };
 
-&bq24296 {
+&bq24296m {
 	status = "okay";
 	power-supplies = <&charger>;
 	monitored-battery = <&bat>;
