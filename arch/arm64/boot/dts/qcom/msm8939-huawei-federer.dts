@@ -308,6 +308,7 @@
 		compatible = "ti,bq24296m";
 		reg = <0x6B>;
 
+        monitored-battery = <&bat>;
 		ti,chg_current = <1000 500 2000>; // chg_current (max for the battery), usb_input_current, adp_input_current
 		interrupt-parent = <&msmgpio>;
 		interrupts = <62 IRQ_TYPE_EDGE_FALLING>;
@@ -449,12 +450,12 @@
 	status = "okay";
 };
 
-&bq24296m {
+/*&bq24296m {
 	status = "okay";
 	power-supplies = <&charger>;
 	monitored-battery = <&bat>;
 };
-
+*/
 /*&pm8916_bms {
 	status = "okay";
 	power-supplies = <&charger>;
