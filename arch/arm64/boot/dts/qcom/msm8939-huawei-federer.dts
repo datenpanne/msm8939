@@ -174,7 +174,7 @@
 		pinctrl-0 = <&pp1800_lcd_en>;
 
 		enable-active-high;
-
+		regulator-always-on;
 		gpio = <&msmgpio 109 GPIO_ACTIVE_HIGH>;
 	};
 
@@ -304,9 +304,9 @@
 &blsp_i2c4 {
 	status = "okay";
 
-	charger: bq24296m@6B {
+	charger: battery@6b {
 		compatible = "ti,bq24296m";
-		reg = <0x6B>;
+		reg = <0x6b>;
 
         monitored-battery = <&bat>;
 		ti,chg_current = <1000 500 2000>; // chg_current (max for the battery), usb_input_current, adp_input_current
