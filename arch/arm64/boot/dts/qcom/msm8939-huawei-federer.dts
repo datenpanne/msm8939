@@ -281,7 +281,7 @@
 
 &blsp_i2c2 {
 	status = "okay";
-	
+
 	accelerometer@1f {
 		compatible = "kionix,kx023-1025";
 		reg = <0x1f>;
@@ -299,12 +299,12 @@
                         "0", "-1", "0",
                         "0", "0", "1";
         };
-    };
+};
 
 &blsp_i2c4 {
 	status = "okay";
 
-	charger: battery@6b {
+	/*charger: battery@6b {
 		compatible = "ti,bq24296m";
 		reg = <0x6b>;
 
@@ -334,16 +334,15 @@
 //				regulator-max-microvolt = <5100000>;
 			};
 		};
-	};
+	};*/
 
-	/*charger: bq24296@6B {
+	charger: bq24296@6B {
 		compatible = "ti,bq24296";
 		reg = <0x6B>;
 		
 		monitored-battery = <&bat>;
 		interrupt-parent = <&msmgpio>;
 		interrupts = <62 IRQ_TYPE_EDGE_FALLING>;
-		//dc-det = <108 GPIO_ACTIVE_LOW>;
 		
 		pinctrl-names = "default", "sleep";
 		pinctrl-0 = <&bq_irq_default>; // &bq_dc_irq_default>;
@@ -363,7 +362,7 @@
 		ti,bq2429x,termination-current = <180>;
 		ti,bq2429x,boost-volt = <5000>;
 		ti,bq2429x,enable_term;
-	};*/
+	};
 
 	ncp6335d: ncp6335d-regulator@1c {
 		compatible = "onnn,ncp6335d";
@@ -416,7 +415,7 @@
 	status = "okay";
 };
 
-&dsi0 {	
+&dsi0 {
 	panel@0 {
 		status = "okay";
 		compatible = "boe,nt51021-10-1200p";
@@ -456,11 +455,11 @@
 	monitored-battery = <&bat>;
 };
 */
-/*&pm8916_bms {
+&pm8916_bms {
 	status = "okay";
 	power-supplies = <&charger>;
 	monitored-battery = <&bat>;
-};*/
+};
 
 &mdss {
 	status = "okay";
@@ -551,12 +550,12 @@
 
 &usb {
 	status = "okay";
-	extcon = <&usb_id>, <&usb_id>;
+	extcon = <&charger>, <&usb_id>;
 	//vbus-supply = <&otg_reg>;
 };
 
 &usb_hs_phy {
-	//extcon = <&charger>;
+	extcon = <&charger>;
 	extcon = <&usb_id>;
 };
 
@@ -799,13 +798,13 @@
 		drive-strength = <2>;
 	};
 	
-	bq_dc_default: bq-dc-default {
+	/*bq_dc_default: bq-dc-default {
 		pins = "gpio108";
 		function = "gpio";
 
 		drive-strength = <2>;
 		bias-disable = <0>;
-	};
+	};*/
 
 	bq {
 		bq_irq_default: bq-irq-default {
