@@ -451,13 +451,13 @@
 
 /*&bq24296m {
 	status = "okay";
-	power-supplies = <&charger>;
+	power-supplies = <&bq24296>;
 	monitored-battery = <&bat>;
 };
 */
 &pm8916_bms {
 	status = "okay";
-	power-supplies = <&charger>;
+	power-supplies = <&bq24296>;
 	monitored-battery = <&bat>;
 };
 
@@ -550,12 +550,12 @@
 
 &usb {
 	status = "okay";
-	extcon = <&charger>, <&usb_id>;
+	extcon = <&bq24296>, <&usb_id>;
 	//vbus-supply = <&otg_reg>;
 };
 
 &usb_hs_phy {
-	#extcon = <&charger>;
+	//extcon = <&charger>;
 	extcon = <&usb_id>;
 };
 
