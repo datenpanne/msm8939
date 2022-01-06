@@ -716,7 +716,7 @@ static int bq2429x_otg_is_writeable(struct power_supply *psy,
 }*/
 
 static char *bq2429x_supplied_to[] = {
-	"main-battery",
+	"battery",
 };
 
 static int bq2429x_psy_register(struct bq2429x *bq)
