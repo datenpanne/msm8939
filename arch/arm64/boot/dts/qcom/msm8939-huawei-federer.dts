@@ -457,8 +457,9 @@
 */
 &pm8916_bms {
 	status = "okay";
-	power-supplies = <&bq24296>;
+
 	monitored-battery = <&bat>;
+	power-supplies = <&bq24296>;
 };
 
 &mdss {
@@ -474,7 +475,7 @@
 	status = "okay";
 };
 
-&pm8916_vadc {
+/*&pm8916_vadc {
 	status = "okay";
 
 	adc-chan@11 {
@@ -484,7 +485,7 @@
 		reg = <VADC_P_MUX4_1_1>;
 	};
 };
-
+*/
 &pronto {
 	status = "okay";
 
@@ -550,7 +551,7 @@
 
 &usb {
 	status = "okay";
-	extcon = <&bq24296>, <&usb_id>;
+	extcon = <&usb_id>, <&usb_id>;
 	//vbus-supply = <&otg_reg>;
 };
 
